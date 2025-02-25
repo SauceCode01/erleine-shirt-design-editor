@@ -81,33 +81,38 @@ const snapRangeWithRange = (
 	if (snapToCenter) return snapToCenter;
 };
 
-const snapBoxWithBox = (mx,my,mw,mh, sx,sy,sw,sh, vguide, hguide, target) => {
+const snapBoxWithBox = (movingObj, staticRect, vguide, hguide) => {
 	var snapped = false;
+
+
+	movingObj.setCoords();
+	var movingRect = movingObj.getBoundingRect(true)
+
 
 	// snap x
 	var snapx = snapRangeWithRange(
-		mx,
-		mw,
+		movingRect.left,
+		movingRect.width,
 
-		sx,
-		sw,
+		staticRect.left,
+		staticRect.width,
 		vguide
 	);
 	if (snapx) {
-		target.set({ left: mx + snapx });
+		movingObj.set({ left: movingObj.left + snapx });
 		snapped = true;
 	}
 
 	var snapy = snapRangeWithRange(
-		my,
-		mh,
+		movingRect.top,
+		movingRect.height,
 
-		sy,
-		sh,
+		staticRect.top,
+		staticRect.height,
 		hguide
 	);
 	if (snapy) {
-		target.set({ top: my + snapy });
+		movingObj.set({ top: movingObj.top + snapy });
 		snapped = true;
 	}
 
@@ -116,32 +121,17 @@ const snapBoxWithBox = (mx,my,mw,mh, sx,sy,sw,sh, vguide, hguide, target) => {
 }
 
 const handleObjectMoving = (canvas, target) => {
-	const canvasWidth = canvas.width;
-	const canvasHeight = canvas.height;
+	const canvasRect = {top:0,left:0,width:canvas.width, height:canvas.height}
 
-	const boundingRect = target.getBoundingRect(true)
-
-	const width = target.width * target.scaleX;
-	const height = target.height * target.scaleY;
-
-	const left = target.left;
-	const top = target.top;
-	const right = left + width;
-	const bottom = top + height;
-
-	const centerX = left + width / 2;
-	const centerY = top + height / 2;
 
 	let horizontalGuidelines = [];
 	let verticalGuidelines = [];
 	clearGuidelines(canvas);
 
 	let snapped = false;
-	let snapv = false;
-	let snaph = false;
 
 	// SNAP TO CANVAS
-	snapped = snapped || snapBoxWithBox(left, top, width, height, 0,0,canvasWidth,canvasHeight, verticalGuidelines, horizontalGuidelines, target);
+	snapped = snapped || snapBoxWithBox(target, canvasRect, verticalGuidelines, horizontalGuidelines);
 	
 
 	// SNAP TO OTHER OBJECTS
@@ -156,8 +146,8 @@ const handleObjectMoving = (canvas, target) => {
 	});
 
 	comparisonObjects.forEach((obj) => {
-		
-		snapped = snapped || snapBoxWithBox(left, top, width, height, obj.left,obj.top,obj.width*obj.scaleX,obj.height*obj.scaleY, verticalGuidelines, horizontalGuidelines, target);
+		obj.setCoords();
+		snapped = snapped || snapBoxWithBox(target, obj.getBoundingRect(), verticalGuidelines, horizontalGuidelines);
 	})
 
 
