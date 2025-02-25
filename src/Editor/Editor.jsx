@@ -14,14 +14,14 @@ import LayersList from "./LayerList";
 import LayerManager from "./LayerManager";
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import Elements from "./Elements";
+import Toolbar from "./Toolbar";
 
 const Editor = () => {
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
 	const [guidelines, setGuidelines] = useState([]);
 
-	const [bg, setBg] = useState(null);
-	const [rr, setRr] = useState(null)
 
 	const [zoomLevel, setZoomLevel] = useState(1);
 
@@ -57,7 +57,6 @@ const Editor = () => {
 			bg.id = "background-";
 			initialCanvas.add(bg);
 
-			setBg(bg)
 
 			initialCanvas.renderAll();
 			setCanvas(initialCanvas);
@@ -109,8 +108,6 @@ const Editor = () => {
 				}
 			});
 			initialCanvas.on("mouse:up", function (opt) {
-				// on mouse up we want to recalculate new interaction
-				// for all objects, so we call setViewportTransform
 				this.setViewportTransform(this.viewportTransform);
 				this.isDragging = false;
 				this.selection = true;
@@ -122,142 +119,21 @@ const Editor = () => {
 		}
 	}, []);
 
-	const addRectangle = () => {
-		if (canvas) {
-			const rect = new Rect({
-				left: 50,
-				top: 50,
-				fill: "#00eeee",
-				width: 100,
-				height: 100,
-				selectable: true,
-				stroke: "black",
-				strokeWidth: 1,
-				strokeUniform: true,
-			});
-			canvas.add(rect);
-			setRr(rect)
-		}
-	};
-
-	const addCircle = () => {
-		if (canvas) {
-			const circle = new Circle({
-				left: 150,
-				top: 50,
-				fill: "#00eeee",
-				radius: 50,
-				selectable: true,
-				stroke: "black",
-				strokeWidth: 1,
-				strokeUniform: true,
-			});
-			canvas.add(circle);
-		}
-	};
-
-	const addTriangle = () => {
-		if (canvas) {
-			const triangle = new Triangle({
-				left: 250,
-				top: 50,
-				fill: "#00eeee",
-				width: 100,
-				height: 100,
-				selectable: true,
-				stroke: "black",
-				strokeWidth: 1,
-				strokeUniform: true,
-			});
-			canvas.add(triangle);
-		}
-	};
-
-	const handleDownload = () => {
-		if(!bg) {console.log("no download area specified"); return}
-		if(!canvas) return;
-		if(!rr) return
-		const bbg = canvas.getObjects().filter((obj)=>{obj.id? obj.id.startsWith("background-"):false})
-		const vp = canvas.viewportTransform
-		const iiiii = {
-			left: vp[4],
-			top: vp[5],
-			width: vp[0]*500,
-			height: vp[3]*500,
-			format: "png",
-			quality:1
-		}
-		console.log(iiiii, canvas.viewportTransform, canvas.getZoom())
-		const dataUrl = canvas.toDataURL(iiiii);
-
-		const link = document.createElement("a");
-		link.href = dataUrl;
-		link.download = "download.png";
-		link.click();
-	};
 
 	return (
-		<div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
+		<>
+			<div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
+				<div className="flex border-1 border-black">
+					<div className="w-full bg-black">
+						<canvas ref={canvasRef} className="" />
+					</div>
+					<Toolbar canvas={canvas}></Toolbar>
+				</div>
+			</div>
+
 			<p>mousewheel to zoom in and out. ALT + DRAG to pan.</p>
 			<p>ZOOM: {zoomLevel}</p>
-			<button onClick={handleDownload}>DOWNLOAD</button>
-			<div>
-				<button
-					className="border-2 border-black rounded-full m-2 p-1"
-					onClick={addRectangle}
-				>
-					Add Rectanglee
-				</button>
-				<button
-					className="border-2 border-black rounded-full m-2 p-1"
-					onClick={addCircle}
-				>
-					Add Circle
-				</button>
-				<button
-					className="border-2 border-black rounded-full m-2 p-1"
-					onClick={addTriangle}
-				>
-					Add Triangle
-				</button>
-			</div>
-
-			<div className="flex">
-				{/* <LayersList canvas={canvas}></LayersList> */}
-			</div>
-
-			<div className="flex border-1 border-black">
-				<div className="w-full bg-black">
-					<canvas ref={canvasRef} className="" />
-				</div>
-				<div className=" right-0 top-0 height-full w-[20%] bg-amber-300">
-					<TabGroup vertical className="flex flex-row-reverse">
-						<TabList className="flex flex-col p-3">
-							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-								Settings
-							</Tab>
-							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-								CanvasSettings
-							</Tab>
-							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-								Layers
-							</Tab>
-						</TabList>
-						<TabPanels>
-							<TabPanel className="bg-gray-200 shadow-2xl">
-								<Settings canvas={canvas}></Settings>
-							</TabPanel>
-							<TabPanel className="bg-gray-200 shadow-2xl">
-								<CanvasSettings canvas={canvas}></CanvasSettings>
-							</TabPanel>
-							<TabPanel className="bg-gray-200 shadow-2xl">
-								<LayerManager canvas={canvas}></LayerManager>
-							</TabPanel>
-						</TabPanels>
-					</TabGroup>
-				</div>
-			</div>
-		</div>
+		</>
 	);
 };
 
