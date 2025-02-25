@@ -2,6 +2,7 @@ import { Line } from "fabric";
 
 const snappingDistance = 20;
 
+
 export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 	const canvasWidth = canvas.width;
 	const canvasHeight = canvas.height;
@@ -18,6 +19,8 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 	clearGuidelines(canvas);
 
 	let snapped = false;
+	let snapv = false
+	let snaph = false
 
 	if (Math.abs(left) < snappingDistance) {
 		obj.set({ left: 0 });
@@ -27,6 +30,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snapv = true
 	}
 
 	if (Math.abs(right - canvasWidth) < snappingDistance) {
@@ -41,6 +45,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snapv = true
 	}
 
 	if (Math.abs(top) < snappingDistance) {
@@ -51,6 +56,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snaph = true
 	}
 
 	if (Math.abs(bottom - canvasHeight) < snappingDistance) {
@@ -65,6 +71,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snaph = true
 	}
 
 	if (Math.abs(centerX - canvasWidth / 2) < snappingDistance) {
@@ -79,6 +86,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snapv = true
 	}
 
 	if (Math.abs(centerY - canvasHeight / 2) < snappingDistance) {
@@ -93,7 +101,125 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 			canvas.add(line);
 		}
 		snapped = true;
+		snaph = true
 	}
+
+	// snapping on other objects
+	var objects = canvas.getObjects();
+	var activeObjects = canvas.getActiveObjects();
+
+	var comparisonObjects = objects.filter((obj) => {
+		var selected = activeObjects.includes(obj);
+		var line = obj.type === "line";
+		return !selected && !line;
+	});
+	comparisonObjects.forEach((cc) => {
+		// snap top
+		if (Math.abs(top - cc.top) < snappingDistance && !snaph) {
+			obj.set({ top: cc.top });
+
+			const line = createHorizontalGuideline(
+				canvas,
+				cc.top,
+				`horizontal-${cc.top}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+			snaph = true
+		}
+
+		
+		// snap bot
+		if (Math.abs(bottom - (cc.top + cc.height*cc.scaleY)) < snappingDistance && !snaph) {
+			obj.set({ top: top +  (cc.top + cc.height*cc.scaleY) - bottom});
+
+			const line = createHorizontalGuideline(
+				canvas,
+				cc.top + cc.height*cc.scaleY,
+				`horizontal-${cc.top + cc.height*cc.scaleY}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+			snaph = true
+		}
+
+
+
+
+		// snap left
+		if (Math.abs(left - cc.left) < snappingDistance && !snapv) {
+			obj.set({ left: cc.left });
+
+			const line = createVerticalGuideline(
+				canvas,
+				cc.left,
+				`vertical-${cc.left}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+			snapv = true
+		}
+
+		
+		// snap right
+		if (Math.abs(right - (cc.left + cc.width*cc.scaleX)) < snappingDistance && !snapv) {
+			obj.set({ left: left +  (cc.left + cc.width*cc.scaleX) - right});
+
+			const line = createVerticalGuideline(
+				canvas,
+				cc.left + cc.width*cc.scaleX,
+				`horizontal-${cc.left + cc.width*cc.scaleX}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+			snapv = true
+		}
+
+
+		
+		// snap centerx
+		if (Math.abs(centerX - (cc.left + cc.width*cc.scaleX/2)) < snappingDistance && !snapv) {
+			obj.set({ left: left +  (cc.left + cc.width*cc.scaleX/2) - centerX});
+
+			const line = createVerticalGuideline(
+				canvas,
+				cc.left + cc.width*cc.scaleX/2,
+				`horizontal-${cc.left + cc.width*cc.scaleX/2}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+			snapv = true
+		}
+
+		
+		
+		// snap centerY
+			snaph = true
+		if (Math.abs(centerY - (cc.top + cc.height*cc.scaleY/2)) < snappingDistance && !snaph) {
+			obj.set({ top: top +  (cc.top + cc.height*cc.scaleY/2) - centerY});
+
+			const line = createHorizontalGuideline(
+				canvas,
+				cc.top + cc.height*cc.scaleY/2,
+				`horizontal-${cc.top + cc.height*cc.scaleY/2}`
+			);
+			newGuidelines.push(line);
+			canvas.add(line);
+
+			snapped = true;
+		}
+
+	});
 
 	if (!snapped) {
 		clearGuidelines(canvas);

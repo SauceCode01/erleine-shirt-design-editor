@@ -5,6 +5,8 @@ import CanvasSettings from "./CanvasSettings";
 
 import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers";
 import LayersList from "./LayerList";
+import LayerManager from "./LayerManager";
+
 
 const Editor = () => {
 	const canvasRef = useRef(null);
@@ -28,6 +30,7 @@ const Editor = () => {
 
 			initialCanvas.on("object:modified", (event)=> clearGuidelines(initialCanvas, guidelines, setGuidelines))
 
+
 			return () => {
 				initialCanvas.dispose();
 			};
@@ -50,6 +53,9 @@ const Editor = () => {
 			canvas.add(rect);
 		}
 	};
+
+	
+
 
 	const addCircle = () => {
 		if (canvas) {
@@ -84,14 +90,68 @@ const Editor = () => {
 		}
 	};
 
+
+	const handleBringObjectForward = () => {
+		const selected = canvas.getActiveObjects().reverse();
+		selected.forEach((obj,index)=>canvas.bringObjectForward(obj))
+		
+		canvas.renderAll()
+	}
+
+	const handleSendObjectBackward = () => {
+		
+		const selected = canvas.getActiveObjects();
+		selected.forEach((obj,index)=>canvas.sendObjectBackwards(obj))
+		
+		canvas.renderAll()
+	}
+
+	const handleBringObjectToFront = () => {
+		const selected = canvas.getActiveObjects();
+		selected.forEach((obj,index)=>canvas.bringObjectToFront(obj))
+		
+		canvas.renderAll()
+	}
+	const handleSendObjectToBack = () => {
+		const selected = canvas.getActiveObjects().reverse();
+		selected.forEach((obj,index)=>canvas.sendObjectToBack(obj))
+		
+		canvas.renderAll()
+	}
+
+
 	return (
 		<div className="w-full h-full flex flex-col items-center justify-center">
 			<div>
 				<button
 					className="border-2 border-black rounded-full m-2 p-1"
+					onClick={handleBringObjectForward}
+				>
+					FORWARD
+				</button>
+				<button
+					className="border-2 border-black rounded-full m-2 p-1"
+					onClick={handleSendObjectBackward}
+				>
+					BACKWARD
+				</button>
+				<button
+					className="border-2 border-black rounded-full m-2 p-1"
+					onClick={handleBringObjectToFront}
+				>
+					FRONT
+				</button>
+				<button
+					className="border-2 border-black rounded-full m-2 p-1"
+					onClick={handleSendObjectToBack}
+				>
+					BACK
+				</button>
+				<button
+					className="border-2 border-black rounded-full m-2 p-1"
 					onClick={addRectangle}
 				>
-					Add Rectangle
+					Add Rectanglee
 				</button>
 				<button
 					className="border-2 border-black rounded-full m-2 p-1"
@@ -112,7 +172,8 @@ const Editor = () => {
 
 			<Settings canvas={canvas}></Settings>
 			<CanvasSettings canvas={canvas}></CanvasSettings>
-			<LayersList canvas={canvas}></LayersList>
+			{/* <LayersList canvas={canvas}></LayersList> */}
+			<LayerManager canvas={canvas}></LayerManager>
 			</div>
 		</div>
 	);
