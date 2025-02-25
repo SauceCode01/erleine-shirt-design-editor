@@ -2,20 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import {
 	Canvas,
 	Rect,
-	Circle,
-	Triangle,
 	InteractiveFabricObject,
 } from "fabric";
-import Settings from "./Settings";
-import CanvasSettings from "./CanvasSettings";
-
 import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers";
-import LayersList from "./LayerList";
-import LayerManager from "./LayerManager";
-
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import Elements from "./Elements";
 import Toolbar from "./Toolbar";
+import Uwu from "./test";
 
 const Editor = () => {
 	const canvasRef = useRef(null);
@@ -23,42 +14,10 @@ const Editor = () => {
 	const [guidelines, setGuidelines] = useState([]);
 
 
-	const [zoomLevel, setZoomLevel] = useState(1);
-
 	useEffect(() => {
 		if (canvasRef.current) {
-			const initialCanvas = new Canvas(canvasRef.current, {
-				backgroundColor: "#aaaaaa",
-				width: 600,
-				height: 400,
-				preserveObjectStacking: true,
-			});
+			const initialCanvas = createCanvas(canvasRef);
 
-			InteractiveFabricObject.ownDefaults = {
-				...InteractiveFabricObject.ownDefaults,
-				cornerStyle: "round",
-				cornerStrokeColor: "blue",
-				cornerColor: "blue",
-				cornerStyle: "circle",
-				transparentCorners: false,
-				borderColor: "blue",
-				borderDashArray: [5, 2],
-			};
-
-			const bg = new Rect({
-				left: 0,
-				top: 0,
-				fill: "#ffffff",
-				width: 500,
-				height: 500,
-				selectable: false,
-				evented: false,
-			});
-			bg.id = "background-";
-			initialCanvas.add(bg);
-
-
-			initialCanvas.renderAll();
 			setCanvas(initialCanvas);
 
 			initialCanvas.on("object:moving", (event) =>
@@ -74,51 +33,11 @@ const Editor = () => {
 				clearGuidelines(initialCanvas, guidelines, setGuidelines)
 			);
 
-			initialCanvas.on("mouse:wheel", function (opt) {
-				console.log("mousewheel");
-				var delta = opt.e.deltaY;
-				var zoom = initialCanvas.getZoom();
-				zoom *= 0.999 ** delta;
-				if (zoom > 20) zoom = 20;
-				if (zoom < 0.01) zoom = 0.01;
-				setZoomLevel(zoom);
-				initialCanvas.setZoom(zoom);
-				opt.e.preventDefault();
-				opt.e.stopPropagation();
-			});
-
-			initialCanvas.on("mouse:down", function (opt) {
-				var evt = opt.e;
-				if (evt.ctrlKey === true) {
-					this.isDragging = true;
-					this.selection = false;
-					this.lastPosX = evt.clientX;
-					this.lastPosY = evt.clientY;
-				}
-			});
-			initialCanvas.on("mouse:move", function (opt) {
-				if (this.isDragging) {
-					var e = opt.e;
-					var vpt = this.viewportTransform;
-					vpt[4] += e.clientX - this.lastPosX;
-					vpt[5] += e.clientY - this.lastPosY;
-					this.requestRenderAll();
-					this.lastPosX = e.clientX;
-					this.lastPosY = e.clientY;
-				}
-			});
-			initialCanvas.on("mouse:up", function (opt) {
-				this.setViewportTransform(this.viewportTransform);
-				this.isDragging = false;
-				this.selection = true;
-			});
-
 			return () => {
 				initialCanvas.dispose();
 			};
 		}
 	}, []);
-
 
 	return (
 		<>
@@ -132,9 +51,83 @@ const Editor = () => {
 			</div>
 
 			<p>mousewheel to zoom in and out. ALT + DRAG to pan.</p>
-			<p>ZOOM: {zoomLevel}</p>
+			<Uwu canvas={canvas}></Uwu>
 		</>
 	);
+};
+
+const createCanvas = (canvasRef) => {
+	const initialCanvas = new Canvas(canvasRef.current, {
+		backgroundColor: "#aaaaaa",
+		width: 600,
+		height: 400,
+		preserveObjectStacking: true,
+	});
+
+	InteractiveFabricObject.ownDefaults = {
+		...InteractiveFabricObject.ownDefaults,
+		cornerStyle: "round",
+		cornerStrokeColor: "blue",
+		cornerColor: "blue",
+		cornerStyle: "circle",
+		transparentCorners: false,
+		borderColor: "blue",
+		borderDashArray: [5, 2],
+	};
+
+	const bg = new Rect({
+		left: 0,
+		top: 0,
+		fill: "#ffffff",
+		width: 500,
+		height: 500,
+		selectable: false,
+		evented: false,
+	});
+	bg.id = "background-";
+	initialCanvas.add(bg);
+
+	initialCanvas.renderAll();
+
+	initialCanvas.on("mouse:wheel", function (opt) {
+		console.log("mousewheel");
+		var delta = opt.e.deltaY;
+		var zoom = initialCanvas.getZoom();
+		zoom *= 0.999 ** delta;
+		if (zoom > 20) zoom = 20;
+		if (zoom < 0.01) zoom = 0.01;
+		initialCanvas.setZoom(zoom);
+		opt.e.preventDefault();
+		opt.e.stopPropagation();
+	});
+
+	initialCanvas.on("mouse:down", function (opt) {
+		var evt = opt.e;
+		if (evt.ctrlKey === true) {
+			this.isDragging = true;
+			this.selection = false;
+			this.lastPosX = evt.clientX;
+			this.lastPosY = evt.clientY;
+		}
+	});
+	initialCanvas.on("mouse:move", function (opt) {
+		if (this.isDragging) {
+			var e = opt.e;
+			var vpt = this.viewportTransform;
+			vpt[4] += e.clientX - this.lastPosX;
+			vpt[5] += e.clientY - this.lastPosY;
+			this.requestRenderAll();
+			this.lastPosX = e.clientX;
+			this.lastPosY = e.clientY;
+		}
+	});
+	initialCanvas.on("mouse:up", function (opt) {
+		this.setViewportTransform(this.viewportTransform);
+		this.isDragging = false;
+		this.selection = true;
+	});
+
+	return initialCanvas;
 };
 
 export default Editor;

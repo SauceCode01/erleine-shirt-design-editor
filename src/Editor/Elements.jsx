@@ -1,20 +1,10 @@
 
-import React, { useEffect, useRef, useState } from "react";
-import {
-	Canvas,
+import React from "react";
+import { 
 	Rect,
 	Circle,
 	Triangle,
-	InteractiveFabricObject,
 } from "fabric";
-import Settings from "./Settings";
-import CanvasSettings from "./CanvasSettings";
-
-import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers";
-import LayersList from "./LayerList";
-import LayerManager from "./LayerManager";
-
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 const Elements = ({canvas}) => {
 
@@ -32,7 +22,6 @@ const Elements = ({canvas}) => {
           strokeUniform: true,
         });
         canvas.add(rect);
-        setRr(rect)
       }
     };
   

@@ -4,6 +4,10 @@ const snappingDistance = 20;
 
 
 export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
+
+	
+
+
 	const canvasWidth = canvas.width;
 	const canvasHeight = canvas.height;
 
