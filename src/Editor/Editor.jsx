@@ -1,50 +1,86 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-	Canvas,
-	Rect,
-	InteractiveFabricObject,
-} from "fabric";
+import { Canvas, Rect, InteractiveFabricObject } from "fabric";
 import Toolbar from "./Toolbar";
 import Uwu from "./test";
 import { EnableSnapping } from "./SnappingHelpers";
 
+
+const canvasWidth = 500
+const canvasHeight = 500;
+
+const useResizeWatcher = (onResize, elementRef) => {
+	useEffect(() => {
+		const observer = new ResizeObserver(() => {
+			if (!elementRef.current) return;
+			onResize(elementRef.current);
+		});
+		observer.observe(elementRef.current);
+		return () => observer.disconnect();
+	}, []);
+};
+
 const Editor = () => {
 	const canvasRef = useRef(null);
-	const [canvas, setCanvas] = useState(null);
-
+	const canvas = useRef(null);
 
 	useEffect(() => {
 		if (canvasRef.current) {
-			const initialCanvas = createCanvas(canvasRef);
+			canvas.current = createCanvas(canvasRef);
 
-			setCanvas(initialCanvas);
-			EnableSnapping(initialCanvas);
+			EnableSnapping(canvas.current);
 
 			return () => {
-				initialCanvas.dispose();
+				canvas.current.dispose();
 			};
 		}
 	}, []);
 
+	var containerRef = useRef();
+
+	useResizeWatcher((elem) => {
+		if (canvas.current) {
+			var ratio = elem.offsetHeight / canvas.current.height 
+
+			// var multiplier = 1 + 1/ratio
+
+			// 2 / 1 => from 1 to 2 => enlarge them you zoom by ratio = 1+1/ratio
+
+			canvas.current.setWidth(elem.offsetWidth);
+			canvas.current.setHeight(elem.offsetHeight);
+
+			
+			// canvas.current.setZoom(canvas.current.getZoom() * multiplier)
+
+			canvas.current.renderAll();
+		}
+	}, containerRef);
+
 	return (
 		<>
-			<div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
-				<div className="flex border-1 border-black">
-					<div className="w-full bg-black">
-						<canvas ref={canvasRef} className="" />
+			<div className="w-full">
+				<div
+					ref={containerRef}
+					className="w-full aspect-4/3 bg-black overflow-clip relative"
+				>
+					<div className="absolute top-0 left-0">
+						<canvas ref={canvasRef} />
 					</div>
-					<Toolbar canvas={canvas}></Toolbar>
 				</div>
 			</div>
 
-			<p>mousewheel to zoom in and out. ALT + DRAG to pan.</p>
-			<Uwu canvas={canvas}></Uwu>
+			{/* <div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
+				<div className="flex border-1 border-black">
+					<div className="w-full bg-black">
+					</div>
+					<Toolbar canvas={canvas}></Toolbar>
+				</div>
+			</div> */}
 		</>
 	);
 };
 
 const createCanvas = (canvasRef) => {
-	const initialCanvas = new Canvas(canvasRef.current, {
+	const canvas = new Canvas(canvasRef.current, {
 		backgroundColor: "#aaaaaa",
 		width: 500,
 		height: 500,
@@ -66,29 +102,29 @@ const createCanvas = (canvasRef) => {
 		left: 0,
 		top: 0,
 		fill: "#ffffff",
-		width: 500,
-		height: 500,
+		width: canvasWidth,
+		height: canvasHeight,
 		selectable: false,
 		evented: false,
 	});
 	bg.id = "background-";
-	initialCanvas.add(bg);
+	canvas.add(bg);
 
-	initialCanvas.renderAll();
+	canvas.renderAll();
 
-	initialCanvas.on("mouse:wheel", function (opt) {
+	canvas.on("mouse:wheel", function (opt) {
 		console.log("mousewheel");
 		var delta = opt.e.deltaY;
-		var zoom = initialCanvas.getZoom();
+		var zoom = canvas.getZoom();
 		zoom *= 0.999 ** delta;
 		if (zoom > 20) zoom = 20;
 		if (zoom < 0.01) zoom = 0.01;
-		initialCanvas.setZoom(zoom);
+		canvas.setZoom(zoom);
 		opt.e.preventDefault();
 		opt.e.stopPropagation();
 	});
 
-	initialCanvas.on("mouse:down", function (opt) {
+	canvas.on("mouse:down", function (opt) {
 		var evt = opt.e;
 		if (evt.ctrlKey === true) {
 			this.isDragging = true;
@@ -97,7 +133,7 @@ const createCanvas = (canvasRef) => {
 			this.lastPosY = evt.clientY;
 		}
 	});
-	initialCanvas.on("mouse:move", function (opt) {
+	canvas.on("mouse:move", function (opt) {
 		if (this.isDragging) {
 			var e = opt.e;
 			var vpt = this.viewportTransform;
@@ -108,13 +144,13 @@ const createCanvas = (canvasRef) => {
 			this.lastPosY = e.clientY;
 		}
 	});
-	initialCanvas.on("mouse:up", function (opt) {
+	canvas.on("mouse:up", function (opt) {
 		this.setViewportTransform(this.viewportTransform);
 		this.isDragging = false;
 		this.selection = true;
 	});
 
-	return initialCanvas;
+	return canvas;
 };
 
 export default Editor;

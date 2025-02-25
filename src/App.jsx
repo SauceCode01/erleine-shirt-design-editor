@@ -5,10 +5,9 @@ import Editor from './Editor/Editor'
 const App = () => {
   return (
     <>
-    <h1>This is app.jsx</h1>
-    <div className='bg-red-900'>App</div>
+    <div className='w-full h-full p-10 bg-gray-900 flex items-center justify-center'>
     <Editor></Editor>
-    {/* <Canvas></Canvas> */}
+    </div>
     </>
   )
 }
