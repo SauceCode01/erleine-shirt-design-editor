@@ -24,7 +24,7 @@ const LayerManager = ({ canvas }) => {
 			.filter((obj) =>
 				obj.id
 					? !(
-							obj.id.startsWith("vertical-") || obj.id.startsWith("horizontal-")
+							obj.id.startsWith("vertical-") || obj.id.startsWith("horizontal-") || obj.id.startsWith("background-")
 					  )
 					: true
 			)
