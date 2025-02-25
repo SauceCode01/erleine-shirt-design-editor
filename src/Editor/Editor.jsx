@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Canvas, Rect, Circle, Triangle, InteractiveFabricObject } from "fabric";
+import {
+	Canvas,
+	Rect,
+	Circle,
+	Triangle,
+	InteractiveFabricObject,
+} from "fabric";
 import Settings from "./Settings";
 import CanvasSettings from "./CanvasSettings";
 
@@ -14,7 +20,10 @@ const Editor = () => {
 	const [canvas, setCanvas] = useState(null);
 	const [guidelines, setGuidelines] = useState([]);
 
-	const [zoomLevel, setZoomLevel] = useState(1)
+	const [bg, setBg] = useState(null);
+	const [rr, setRr] = useState(null)
+
+	const [zoomLevel, setZoomLevel] = useState(1);
 
 	useEffect(() => {
 		if (canvasRef.current) {
@@ -27,14 +36,14 @@ const Editor = () => {
 
 			InteractiveFabricObject.ownDefaults = {
 				...InteractiveFabricObject.ownDefaults,
-				cornerStyle: 'round',
-				cornerStrokeColor: 'blue',
-				cornerColor: 'blue',
-				cornerStyle: 'circle',
+				cornerStyle: "round",
+				cornerStrokeColor: "blue",
+				cornerColor: "blue",
+				cornerStyle: "circle",
 				transparentCorners: false,
-				borderColor: 'blue',
-				borderDashArray: [5,2],
-		}
+				borderColor: "blue",
+				borderDashArray: [5, 2],
+			};
 
 			const bg = new Rect({
 				left: 0,
@@ -43,11 +52,12 @@ const Editor = () => {
 				width: 500,
 				height: 500,
 				selectable: false,
-				evented:false,
+				evented: false,
 			});
-			bg.id = "background-"
+			bg.id = "background-";
 			initialCanvas.add(bg);
 
+			setBg(bg)
 
 			initialCanvas.renderAll();
 			setCanvas(initialCanvas);
@@ -65,21 +75,20 @@ const Editor = () => {
 				clearGuidelines(initialCanvas, guidelines, setGuidelines)
 			);
 
-
-			initialCanvas.on('mouse:wheel', function(opt) {
-				console.log("mousewheel")
+			initialCanvas.on("mouse:wheel", function (opt) {
+				console.log("mousewheel");
 				var delta = opt.e.deltaY;
 				var zoom = initialCanvas.getZoom();
 				zoom *= 0.999 ** delta;
 				if (zoom > 20) zoom = 20;
 				if (zoom < 0.01) zoom = 0.01;
-				setZoomLevel(zoom)
+				setZoomLevel(zoom);
 				initialCanvas.setZoom(zoom);
 				opt.e.preventDefault();
 				opt.e.stopPropagation();
-			})
+			});
 
-			initialCanvas.on('mouse:down', function(opt) {
+			initialCanvas.on("mouse:down", function (opt) {
 				var evt = opt.e;
 				if (evt.ctrlKey === true) {
 					this.isDragging = true;
@@ -88,7 +97,7 @@ const Editor = () => {
 					this.lastPosY = evt.clientY;
 				}
 			});
-			initialCanvas.on('mouse:move', function(opt) {
+			initialCanvas.on("mouse:move", function (opt) {
 				if (this.isDragging) {
 					var e = opt.e;
 					var vpt = this.viewportTransform;
@@ -99,7 +108,7 @@ const Editor = () => {
 					this.lastPosY = e.clientY;
 				}
 			});
-			initialCanvas.on('mouse:up', function(opt) {
+			initialCanvas.on("mouse:up", function (opt) {
 				// on mouse up we want to recalculate new interaction
 				// for all objects, so we call setViewportTransform
 				this.setViewportTransform(this.viewportTransform);
@@ -127,6 +136,7 @@ const Editor = () => {
 				strokeUniform: true,
 			});
 			canvas.add(rect);
+			setRr(rect)
 		}
 	};
 
@@ -163,13 +173,34 @@ const Editor = () => {
 		}
 	};
 
+	const handleDownload = () => {
+		if(!bg) {console.log("no download area specified"); return}
+		if(!canvas) return;
+		if(!rr) return
+		const bbg = canvas.getObjects().filter((obj)=>{obj.id? obj.id.startsWith("background-"):false})
+		const vp = canvas.viewportTransform
+		const iiiii = {
+			left: vp[4],
+			top: vp[5],
+			width: vp[0]*500,
+			height: vp[3]*500,
+			format: "png",
+			quality:1
+		}
+		console.log(iiiii, canvas.viewportTransform, canvas.getZoom())
+		const dataUrl = canvas.toDataURL(iiiii);
+
+		const link = document.createElement("a");
+		link.href = dataUrl;
+		link.download = "download.png";
+		link.click();
+	};
+
 	return (
-		<div className="w-full h-full flex flex-col items-center justify-center">
-			<p>
-				mousewheel to zoom in and out. 
-				ALT + DRAG to pan.
-			</p>
+		<div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
+			<p>mousewheel to zoom in and out. ALT + DRAG to pan.</p>
 			<p>ZOOM: {zoomLevel}</p>
+			<button onClick={handleDownload}>DOWNLOAD</button>
 			<div>
 				<button
 					className="border-2 border-black rounded-full m-2 p-1"
@@ -190,27 +221,42 @@ const Editor = () => {
 					Add Triangle
 				</button>
 			</div>
-			<canvas ref={canvasRef} className=" border-1 border-black" />
 
 			<div className="flex">
-				<Settings canvas={canvas}></Settings>
-				<CanvasSettings canvas={canvas}></CanvasSettings>
 				{/* <LayersList canvas={canvas}></LayersList> */}
-				<LayerManager canvas={canvas}></LayerManager>
 			</div>
 
-			<TabGroup vertical className="flex flex-row-reverse">
-				<TabList className="flex flex-col p-3 bg-white">
-					<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">Tab 1</Tab>
-					<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">Tab 2</Tab>
-					<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">Tab 3</Tab>
-				</TabList>
-				<TabPanels className="bg-gray-200 w-full aspect-square p-5">
-					<TabPanel className="bg-white shadow-2xl">Content 1</TabPanel>
-					<TabPanel className="bg-white shadow-2xl">Content 2</TabPanel>
-					<TabPanel className="bg-white shadow-2xl">Content 3</TabPanel>
-				</TabPanels>
-			</TabGroup>
+			<div className="flex border-1 border-black">
+				<div className="w-full bg-black">
+					<canvas ref={canvasRef} className="" />
+				</div>
+				<div className=" right-0 top-0 height-full w-[20%] bg-amber-300">
+					<TabGroup vertical className="flex flex-row-reverse">
+						<TabList className="flex flex-col p-3">
+							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
+								Settings
+							</Tab>
+							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
+								CanvasSettings
+							</Tab>
+							<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
+								Layers
+							</Tab>
+						</TabList>
+						<TabPanels>
+							<TabPanel className="bg-gray-200 shadow-2xl">
+								<Settings canvas={canvas}></Settings>
+							</TabPanel>
+							<TabPanel className="bg-gray-200 shadow-2xl">
+								<CanvasSettings canvas={canvas}></CanvasSettings>
+							</TabPanel>
+							<TabPanel className="bg-gray-200 shadow-2xl">
+								<LayerManager canvas={canvas}></LayerManager>
+							</TabPanel>
+						</TabPanels>
+					</TabGroup>
+				</div>
+			</div>
 		</div>
 	);
 };
