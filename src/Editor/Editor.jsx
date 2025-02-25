@@ -4,14 +4,13 @@ import {
 	Rect,
 	InteractiveFabricObject,
 } from "fabric";
-import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers";
 import Toolbar from "./Toolbar";
 import Uwu from "./test";
+import { EnableSnapping } from "./SnappingHelpers";
 
 const Editor = () => {
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
-	const [guidelines, setGuidelines] = useState([]);
 
 
 	useEffect(() => {
@@ -19,19 +18,7 @@ const Editor = () => {
 			const initialCanvas = createCanvas(canvasRef);
 
 			setCanvas(initialCanvas);
-
-			initialCanvas.on("object:moving", (event) =>
-				handleObjectMoving(
-					initialCanvas,
-					event.target,
-					guidelines,
-					setGuidelines
-				)
-			);
-
-			initialCanvas.on("object:modified", (event) =>
-				clearGuidelines(initialCanvas, guidelines, setGuidelines)
-			);
+			EnableSnapping(initialCanvas);
 
 			return () => {
 				initialCanvas.dispose();
@@ -59,8 +46,8 @@ const Editor = () => {
 const createCanvas = (canvasRef) => {
 	const initialCanvas = new Canvas(canvasRef.current, {
 		backgroundColor: "#aaaaaa",
-		width: 600,
-		height: 400,
+		width: 500,
+		height: 500,
 		preserveObjectStacking: true,
 	});
 

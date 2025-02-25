@@ -20,9 +20,9 @@ const Toolbar = ({ canvas }) => {
 						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
 							Settings
 						</Tab>
-						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
+						{/* <Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
 							CanvasSettings
-						</Tab>
+						</Tab> */}
 						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
 							Layers
 						</Tab>
@@ -37,9 +37,9 @@ const Toolbar = ({ canvas }) => {
 						<TabPanel className="bg-gray-200 shadow-2xl">
 							<Settings canvas={canvas}></Settings>
 						</TabPanel>
-						<TabPanel className="bg-gray-200 shadow-2xl">
+						{/* <TabPanel className="bg-gray-200 shadow-2xl">
 							<CanvasSettings canvas={canvas}></CanvasSettings>
-						</TabPanel>
+						</TabPanel> */}
 						<TabPanel className="bg-gray-200 shadow-2xl">
 							<LayerManager canvas={canvas}></LayerManager>
 						</TabPanel>
