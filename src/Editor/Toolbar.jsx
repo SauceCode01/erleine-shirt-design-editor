@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Settings from "./Settings";
 import CanvasSettings from "./CanvasSettings";
 
@@ -9,46 +9,44 @@ import Elements from "./Elements";
 import FileSettings from "./FileSettings";
 
 const Toolbar = ({ canvas }) => {
+	const tabs = [
+		{ name: "Elements", element: <Elements canvas={canvas}></Elements> },
+		{ name: "Settings", element: <Settings canvas={canvas}></Settings> },
+		// {name: "CanvasSettings", element: <CanvasSettings canvas={canvas}></CanvasSettings>},
+		{ name: "Layers", element: <LayerManager canvas={canvas}></LayerManager> },
+		{ name: "File", element: <FileSettings canvas={canvas}></FileSettings> },
+	];
+
+
+	const [showPanels, setShowPanels] = useState(true);
+
 	return (
 		<>
-			<div className=" right-0 top-0 height-full w-[20%] bg-amber-300">
-				<TabGroup vertical className="flex flex-row-reverse">
-					<TabList className="flex flex-col p-3">
-						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-							Elements
-						</Tab>
-						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-							Settings
-						</Tab>
-						{/* <Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-							CanvasSettings
-						</Tab> */}
-						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-							Layers
-						</Tab>
-						<Tab className="bg-blue-300 p-2 rounded-2xl data-[selected]:bg-white/10">
-							File
-						</Tab>
-					</TabList>
+			<TabGroup vertical className="flex flex-row-reverse h-full">
+				<TabList className="flex flex-col justify-start space-y-2 bg-gray-300 h-full">
+					{tabs.map((tab) => {
+						return <Tab className="p-2 data-[selected]:bg-white">
+							{tab.name}
+						</Tab>;
+					})}
+				</TabList>
+
+				{
+					showPanels?
 					<TabPanels>
-						<TabPanel className="bg-gray-200 shadow-2xl">
-							<Elements canvas={canvas}></Elements>
-						</TabPanel>
-						<TabPanel className="bg-gray-200 shadow-2xl">
-							<Settings canvas={canvas}></Settings>
-						</TabPanel>
-						{/* <TabPanel className="bg-gray-200 shadow-2xl">
-							<CanvasSettings canvas={canvas}></CanvasSettings>
-						</TabPanel> */}
-						<TabPanel className="bg-gray-200 shadow-2xl">
-							<LayerManager canvas={canvas}></LayerManager>
-						</TabPanel>
-						<TabPanel className="bg-gray-200 shadow-2xl">
-							<FileSettings canvas={canvas}></FileSettings>
-						</TabPanel>
+						{tabs.map((tab) => {
+							return <TabPanel className="bg-gray-200 shadow-2xl">
+								{tab.element}
+							</TabPanel>;
+						})}
 					</TabPanels>
-				</TabGroup>
-			</div>
+					:""
+				}
+			</TabGroup>
+			{/* <div className=" right-0 top-0 height-full w-[20%] bg-amber-300">
+			
+			</div> */}
+			{/* <button onClick={()=>setShowPanels(!showPanels)}>Toggle</button> */}
 		</>
 	);
 };

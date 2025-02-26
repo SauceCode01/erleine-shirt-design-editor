@@ -3,7 +3,13 @@ import { generateId } from "./Identification";
 
 const snappingDistance = 20;
 
-export const EnableSnapping = (canvas) => {
+var canvasWidth = 10;
+var canvasHeight = 10;
+
+
+export const EnableSnapping = (canvas, pcanvasWidth, pcanvasHeight) => {
+	canvasWidth = pcanvasWidth;
+	canvasHeight =pcanvasHeight
 	canvas.on("object:moving", (event) =>
 		handleObjectMoving(canvas, event.target)
 	);
@@ -121,7 +127,7 @@ const snapBoxWithBox = (movingObj, staticRect, vguide, hguide) => {
 }
 
 const handleObjectMoving = (canvas, target) => {
-	const canvasRect = {top:0,left:0,width:canvas.width, height:canvas.height}
+	const canvasRect = {top:0,left:0,width:canvasWidth, height:canvasHeight}
 
 
 	let horizontalGuidelines = [];

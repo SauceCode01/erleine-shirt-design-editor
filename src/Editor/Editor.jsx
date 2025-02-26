@@ -3,7 +3,7 @@ import { Canvas, Rect, InteractiveFabricObject } from "fabric";
 import Toolbar from "./Toolbar";
 import Uwu from "./test";
 import { EnableSnapping } from "./SnappingHelpers";
-
+import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/react'
 
 const canvasWidth = 500
 const canvasHeight = 500;
@@ -23,11 +23,15 @@ const Editor = () => {
 	const canvasRef = useRef(null);
 	const canvas = useRef(null);
 
+	const [canvasState, setCanvasState] = useState(null)
+
 	useEffect(() => {
 		if (canvasRef.current) {
 			canvas.current = createCanvas(canvasRef);
 
-			EnableSnapping(canvas.current);
+			setCanvasState(canvas.current)
+
+			EnableSnapping(canvas.current, canvasWidth, canvasHeight);
 
 			return () => {
 				canvas.current.dispose();
@@ -60,21 +64,51 @@ const Editor = () => {
 			<div className="w-full">
 				<div
 					ref={containerRef}
-					className="w-full aspect-4/3 bg-black overflow-clip relative"
+					className="w-full aspect-4/2 bg-black overflow-clip relative"
 				>
 					<div className="absolute top-0 left-0">
 						<canvas ref={canvasRef} />
 					</div>
+
+					<div className="absolute top-0 right-0 h-full">
+						<Toolbar canvas={canvas.current}></Toolbar>
+					</div>
 				</div>
 			</div>
 
-			{/* <div className="w-full h-full flex flex-col items-center justify-center border-5 border-red-500 p-10">
-				<div className="flex border-1 border-black">
-					<div className="w-full bg-black">
-					</div>
-					<Toolbar canvas={canvas}></Toolbar>
-				</div>
-			</div> */}
+		<PopoverGroup className="flex flex-col">
+
+		<Popover className="relative">
+      <PopoverButton>Solutions</PopoverButton>
+      <PopoverPanel className="flex flex-col">
+        <a href="/analytics">Analytics</a>
+        <a href="/engagement">Engagement</a>
+        <a href="/security">Security</a>
+        <a href="/integrations">Integrations</a>
+      </PopoverPanel>
+    </Popover>
+		
+		<Popover className="relative">
+      <PopoverButton>Solutions</PopoverButton>
+      <PopoverPanel anchor="left" className="flex flex-col">
+        <a href="/analytics">Analytics</a>
+        <a href="/engagement">Engagement</a>
+        <a href="/security">Security</a>
+        <a href="/integrations">Integrations</a>
+      </PopoverPanel>
+    </Popover>
+		
+		<Popover className="relative">
+      <PopoverButton>Solutions</PopoverButton>
+      <PopoverPanel anchor="left" className="flex flex-col">
+        <a href="/analytics">Analytics</a>
+        <a href="/engagement">Engagement</a>
+        <a href="/security">Security</a>
+        <a href="/integrations">Integrations</a>
+      </PopoverPanel>
+    </Popover>
+		</PopoverGroup>
+
 		</>
 	);
 };
