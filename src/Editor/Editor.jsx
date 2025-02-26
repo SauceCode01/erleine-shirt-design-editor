@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Canvas, Rect, InteractiveFabricObject } from "fabric";
 import Toolbar from "./Toolbar";
-import Uwu from "./test";
 import { EnableSnapping } from "./SnappingHelpers";
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/react'
 

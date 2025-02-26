@@ -1,14 +1,15 @@
 import React from 'react'
 import Canvas from './Canvas'
 import Editor from './Editor/Editor'
+import CanvasContainer from './Editor/CanvasContainer'
 
 const App = () => {
   return (
     <>
-    <div className='w-full h-full p-10 bg-gray-900 flex flex-col items-center justify-center'>
+    <div className='w-full h-[100vh] p-5 bg-gray-300'>
     {/* <Editor></Editor> */}
-    
-    </div>
+    <CanvasContainer></CanvasContainer>
+        </div>
     </>
   )
 }
