@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Settings from "./Settings";
 import CanvasSettings from "./CanvasSettings";
 
@@ -9,16 +9,20 @@ import Elements from "./Elements";
 import FileSettings from "./FileSettings";
 
 const Toolbar = ({ canvas }) => {
-	const tabs = [
-		{ name: "Elements", element: <Elements canvas={canvas}></Elements> },
-		{ name: "Settings", element: <Settings canvas={canvas}></Settings> },
-		// {name: "CanvasSettings", element: <CanvasSettings canvas={canvas}></CanvasSettings>},
-		{ name: "Layers", element: <LayerManager canvas={canvas}></LayerManager> },
-		{ name: "File", element: <FileSettings canvas={canvas}></FileSettings> },
-	];
-
+	const [tabs, setTabs] = useState([]);
 
 	const [showPanels, setShowPanels] = useState(true);
+
+	useEffect(()=>{
+		setTabs([
+			{ name: "Elements", element: <Elements canvas={canvas}></Elements> },
+			{ name: "Settings", element: <Settings canvas={canvas}></Settings> },
+			// {name: "CanvasSettings", element: <CanvasSettings canvas={canvas}></CanvasSettings>},
+			{ name: "Layers", element: <LayerManager canvas={canvas}></LayerManager> },
+			{ name: "File", element: <FileSettings canvas={canvas}></FileSettings> },
+		])
+	})
+
 
 	return (
 		<>

@@ -17,7 +17,7 @@ const Editor = () => {
 		<>
 			<h1>THIS IS THE EDITOR</h1>
 			<CanvasContainer canvas={canvas} setCanvas={setCanvas}></CanvasContainer>
-			<Toolbar canvas={canvas}></Toolbar>
+			{/* <Toolbar canvas={canvas}></Toolbar> */}
 		</>
 	);
 };
