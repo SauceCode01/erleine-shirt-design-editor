@@ -5,8 +5,7 @@ import { useState } from "react";
 
 import { CanvasContext } from "../../Editor";
 import { useRef } from "react";
-import { clamp } from "../../../../utils/Utilities/utilities";
-import { Canvas, InteractiveFabricObject } from "fabric";
+import { clamp } from "../../../../utils/utilities";
 import { EnableSnapping } from "../CanvasComponent/utils/snapper";
 
 import { createCanvas } from "./utils/createCanvas";
