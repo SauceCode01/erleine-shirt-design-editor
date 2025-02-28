@@ -24,7 +24,7 @@ const App = () => {
 						<ToolBar className="flex flex-col w-30 bg-orange-200 gap-1 p-2">
 							<ToolBarButtonContainer>
 								<ToolBarButton className="border-1 border-black">
-									tool btn 1
+									tool btnn 1
 								</ToolBarButton>
 								<ToolBarButton className="border-1 border-black">
 									tool btn 2
@@ -44,6 +44,10 @@ const App = () => {
 					</div>
 				</ToolManager>
 			</div>
+			{/* <div className="w-[100vw] h-[100vh]">
+
+			<Editor></Editor>
+			</div> */}
 		</>
 	);
 };

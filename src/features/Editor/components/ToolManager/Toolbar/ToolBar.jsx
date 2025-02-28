@@ -18,9 +18,11 @@ export const ToolBar = ({ children, className }) => {
 	useEffect(() => {
 		if (toolBarButtonsRef.current) {
 			setToolBarButtons(toolBarButtonsRef.current);
+			console.log("buttons", toolBarButtonsRef.current)
 		}
 		if (toolBarToolsRef.current) {
-			setToolBarTools(toolBarButtonsRef.current);
+			setToolBarTools(toolBarToolsRef.current);
+			console.log("tools", toolBarToolsRef.current)
 		}
 	}, []);
 
@@ -40,11 +42,17 @@ export const ToolBar = ({ children, className }) => {
 				<>
 					<div className={className}>
 						{toolBarButtons.map((button, index) => {
-							const tool = toolBarButtons[index];
+							const mtool = toolBarTools[index];
+							console.log("insideeee", toolBarTools)
 
 							return React.cloneElement(button, {
-								tool: tool,
+								tool: mtool,
 							});
+						})}
+					</div>
+					<div>
+					{toolBarTools.map((button, index) => {
+							<><div>i am tool{button}</div></>
 						})}
 					</div>
 				</>

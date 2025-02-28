@@ -10,6 +10,7 @@ export const ToolManager = ({ children }) => {
 
 	// button behavior
 	const handleToolButtonClick = (button, tool) => () => {
+		console.log("on click", button, tool)
 		if (activeButtonRef.current == button) {
 			// reminder: activeButtonRef is a ref. using useState causes things to get called up twice and I do not know why.
 			// clicked on current selected button

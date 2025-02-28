@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { ToolContext } from "../ToolManager";
 
 export const ToolContainer = ({
-	className,
+	className="",
 	classFolded = "hidden",
 	classNotFolded = "",
 	overrideDefaultFolding=false
@@ -21,7 +21,7 @@ export const ToolContainer = ({
 					toolContext.foldToolContainer ? classFolded : classNotFolded
 				}`}
 			>
-				{toolContext.activeTool ? <>{toolContext.activeTool}</> : <></>}
+				{toolContext.activeTool ? <>have active tool {toolContext.activeTool}</> : <></>}
 			</div>
 		</>
 	);
