@@ -4,13 +4,12 @@ import { useState, useRef, useEffect, createContext } from "react";
 export const ToolContext = createContext();
 
 export const ToolManager = ({ children }) => {
-	const [foldToolContainer, setFoldToolContainer] = useState(false);
+	const [foldToolContainer, setFoldToolContainer] = useState(true);
 	const [activeTool, setActiveTool] = useState(null);
 	const activeButtonRef = useRef(null);
 
 	// button behavior
 	const handleToolButtonClick = (button, tool) => () => {
-		console.log("on click", button, tool)
 		if (activeButtonRef.current == button) {
 			// reminder: activeButtonRef is a ref. using useState causes things to get called up twice and I do not know why.
 			// clicked on current selected button

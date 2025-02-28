@@ -18,7 +18,7 @@ const App = () => {
 
 	return (
 		<>
-			<div className="bg-white w-[100vw] h-[100vh]  ">
+			{/* <div className="bg-white w-[100vw] h-[100vh]  ">
 				<ToolManager>
 					<div className="flex flex-row">
 						<ToolBar className="flex flex-col w-30 bg-orange-200 gap-1 p-2">
@@ -43,11 +43,10 @@ const App = () => {
 						<ToolContainer></ToolContainer>
 					</div>
 				</ToolManager>
-			</div>
-			{/* <div className="w-[100vw] h-[100vh]">
-
-			<Editor></Editor>
 			</div> */}
+			<div className="w-[100vw] h-[100vh]">
+				<Editor></Editor>
+			</div>
 		</>
 	);
 };

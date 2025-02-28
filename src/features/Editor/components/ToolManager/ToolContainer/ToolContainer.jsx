@@ -3,27 +3,31 @@ import React, { useContext } from "react";
 import { ToolContext } from "../ToolManager";
 
 export const ToolContainer = ({
-	className="",
+	className = "",
 	classFolded = "hidden",
 	classNotFolded = "",
-	overrideDefaultFolding=false
+	overrideDefaultFolding = false,
 }) => {
 	const toolContext = useContext(ToolContext);
 	if (overrideDefaultFolding) {
-		classFolded=""
-		classNotFolded=""
+		classFolded = "";
+		classNotFolded = "";
 	}
-	
+
 	return (
 		<>
-			<div
-				className={`${className} ${
-					toolContext.foldToolContainer ? classFolded : classNotFolded
-				}`}
-			>
-				{toolContext.activeTool ? <>have active tool {toolContext.activeTool}</> : <></>}
-			</div>
+			{toolContext.activeTool ? (
+				<>{toolContext.activeTool}</>
+				// <>
+				// 	{React.cloneElement(toolContext.activeTool, {
+				// 		className: `${className} ${
+				// 			toolContext.foldToolContainer ? classFolded : classNotFolded
+				// 		}`,
+				// 	})}
+				// </>
+			) : (
+				""
+			)}
 		</>
 	);
 };
- 

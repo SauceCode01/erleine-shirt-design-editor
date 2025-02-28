@@ -84,7 +84,7 @@ const CanvasComponent = ({}) => {
 					className="p-20 m-auto  inline-block"
 				>
 					<div className="shadow-2xl relative block">
-						<canvas ref={canvasElement}></canvas>;
+						<canvas ref={canvasElement}></canvas>
 					</div>
 				</div>
 			</div>

@@ -18,16 +18,18 @@ const ContainerPadded = ({
 	}
 
 	return (
+		<>
 		<div
 			style={{
 				padding: `calc(var(--spacing) * ${padding})`,
 			}}
-			className={`flex ${className} ${
+			className={`flex bg-blue-200 ${className} ${
 				center ? "justify-center items-center" : ""
 			}`}
 		>
 			{children}
 		</div>
+		</>
 	);
 };
 

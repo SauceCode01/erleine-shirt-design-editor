@@ -1,14 +1,9 @@
-import React, {
-	useEffect,
-	useRef,
-	useState,
-	useContext,
-} from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { ToolContext } from "../ToolManager";
 
-export const ToolBar = ({ children, className }) => {
-	const toolContext = useContext(ToolContext);
+import { generateId } from "../../../../../utils/generateId/generateId";
 
+export const ToolBar = ({ children, className }) => {
 	const toolBarButtonsRef = useRef(null);
 	const toolBarToolsRef = useRef(null);
 
@@ -18,11 +13,9 @@ export const ToolBar = ({ children, className }) => {
 	useEffect(() => {
 		if (toolBarButtonsRef.current) {
 			setToolBarButtons(toolBarButtonsRef.current);
-			console.log("buttons", toolBarButtonsRef.current)
 		}
 		if (toolBarToolsRef.current) {
 			setToolBarTools(toolBarToolsRef.current);
-			console.log("tools", toolBarToolsRef.current)
 		}
 	}, []);
 
@@ -42,17 +35,12 @@ export const ToolBar = ({ children, className }) => {
 				<>
 					<div className={className}>
 						{toolBarButtons.map((button, index) => {
-							const mtool = toolBarTools[index];
-							console.log("insideeee", toolBarTools)
+							const tool = toolBarTools[index];
 
 							return React.cloneElement(button, {
-								tool: mtool,
+								key: generateId(),
+								tool: tool,
 							});
-						})}
-					</div>
-					<div>
-					{toolBarTools.map((button, index) => {
-							<><div>i am tool{button}</div></>
 						})}
 					</div>
 				</>

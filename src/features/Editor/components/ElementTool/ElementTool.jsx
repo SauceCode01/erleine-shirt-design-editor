@@ -61,7 +61,7 @@ const ElementTool = () => {
 
 	return (
 		<>
-			<div className="flex flex-col w-full">
+			<div className="flex flex-col w-full ">
 				<TabGroup>
 					<TabList className="flex flex-row justify-around pb-2">
 						<Tab className="">All</Tab>
