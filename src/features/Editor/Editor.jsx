@@ -14,6 +14,7 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 	const [toolFolded, setToolFolded] = useState(true);
 	const [tool, setTool] = useState(null);
 	const toolName = useRef(null);
+	const buttonRef = useRef(null)
 
 	const [canvas, setCanvas] = useState(null);
 
@@ -21,13 +22,13 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 	const canvasHeight = 500;
 
 	// button behavior
-	const changeTool = (p_tool, p_toolName) => () => {
-		if (toolName.current == p_toolName) {
+	const changeTool = (p_tool, p_buttonRef) => () => {
+		if (buttonRef.current = p_buttonRef) {
 			setToolFolded((p) => !p); // toggle fold
 		} else {
 			setTool((p) => p_tool);
 			setToolFolded((p) => false);
-			toolName.current = p_toolName;
+			buttonRef.current = p_buttonRef;
 		}
 	};
 
@@ -35,12 +36,16 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 		<CanvasContext.Provider
 			value={{ canvas, setCanvas, canvasWidth, canvasHeight }}
 		>
-			<ToolContext.Provider value={{ changeTool }}>
+			<ToolContext.Provider value={{ changeTool,  }}>
 				<div className={` w-full h-full ${className}`}>
 					<div className="wrapper w-full h-full flex flex-row  ">
 						{/* left panel  */}
 						<ContainerDirectional naked className="shadow-2xl z-30">
-							<SideBar />
+							<Sidebar>
+								
+								<ElementTool />
+								<ElementTool />
+							</Sidebar>
 
 							{/* TOOL CONTAINER  */}
 							<div className="h-full w-full flex flex-row bg-gray-100 ">

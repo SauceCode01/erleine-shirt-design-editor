@@ -10,7 +10,7 @@ import LayersTool from "../LayersTool/LayersTool";
 import { CanvasContext } from "../../Editor";
 import { ToolContext } from "../../Editor";
 
- const SideBar = () => {
+ const SideBar = ({children}) => {
 	const canvasContext = useContext(CanvasContext)
 	const toolContext = useContext(ToolContext);
 
@@ -20,14 +20,18 @@ import { ToolContext } from "../../Editor";
 	
 	return (
 		<>
+		
 		<div className="bg-gray-300 pt-2 pb-2 flex flex-col gap-2">
-		<ToolButton
+		
+		{children.map((child)=>(
+			<ToolButton
 				className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200  "
-				toolComponent={<ElementTool canvas={canvas}/>}
-				toolName="ElementTool"
 			>
 				Elements 
 			</ToolButton>
+		))}
+
+		
 			<ToolButton
 				className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200  "
 				toolComponent={<ElementTool canvas={canvas}/>}
