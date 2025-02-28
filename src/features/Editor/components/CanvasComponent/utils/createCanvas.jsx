@@ -13,10 +13,9 @@ export const createCanvas = (canvasRef, width, height) => {
 
 	InteractiveFabricObject.ownDefaults = {
 		...InteractiveFabricObject.ownDefaults,
-		cornerStyle: "round",
+		cornerStyle: "circle",
 		cornerStrokeColor: "blue",
 		cornerColor: "blue",
-		cornerStyle: "circle",
 		transparentCorners: false,
 		borderColor: "blue",
 		borderDashArray: [5, 2],
