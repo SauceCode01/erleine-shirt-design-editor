@@ -1,17 +1,17 @@
-import React from 'react'
-import { generateId } from '../../../../utils/generateId/generateId'
+import React, { useContext } from "react";
 
-const defaultHandleOnClick = (id) => () => {console.log(`toolButton ${id} Clicked`)}
+import { ToolContext } from "../../Editor";
+const ToolButton = ({ children, className = "", toolComponent, toolName }) => {
+	const toolContext = useContext(ToolContext);
 
-const ToolButton = ({children, className="", onClick=null}) => {
-  if (!onClick) onClick = defaultHandleOnClick
-  
+	return (
+		<div
+			className={`${className} `}
+			onClick={toolContext.changeTool(toolComponent, toolName)}
+		>
+			{children}
+		</div>
+	);
+};
 
-  return (
-    <div className={`${className}`} onClick={onClick}>
-      {children}
-    </div>
-  )
-}
-
-export default ToolButton
+export default ToolButton;

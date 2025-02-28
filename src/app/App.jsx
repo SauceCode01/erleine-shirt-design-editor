@@ -6,15 +6,9 @@ import Editor from "../features/Editor";
 const App = () => {
 	return (
 		<>
-			<div className="bg-gray-200 w-full p-5">
-				<div className="bg-white w-[90vw] m-auto p-5 shadow-2xl">
+			<div className="bg-white w-[100vw] h-[100vh]  ">
 					<Editor ></Editor>
-
-					<div className="bg-orange-300 m-5 shadow-2xl aspect-square">hello world </div>
-					<div className="bg-orange-300 m-5 shadow-2xl aspect-square">hello world </div>
-					<div className="bg-orange-300 m-5 shadow-2xl aspect-square">hello world </div>
 				</div>
-			</div>
 		</>
 	);
 };

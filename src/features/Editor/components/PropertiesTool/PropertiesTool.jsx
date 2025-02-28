@@ -3,7 +3,7 @@ import { Group } from "fabric";
 import React, { useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
-const Settings = ({ canvas }) => {
+const PropertiesTool = ({ canvas }) => {
 	const [selectedObject, setSelectedObject] = useState(null);
 	const [width, setWidth] = useState("");
 	const [height, setHeight] = useState("");
@@ -117,4 +117,4 @@ const Settings = ({ canvas }) => {
 	);
 };
 
-export default Settings;
+export default PropertiesTool;
