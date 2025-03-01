@@ -37,12 +37,11 @@ export const LayerTool = () => {
 
 	const updateSelection = (e) => {
 		setSelection(e.selected);
-		console.log("NEW SLECTION" , e.selected, canvas.getActiveObjects())
 	};
 
 	const clearSelection = () => {
 		setSelection([]);
-		setLastCakeIndexClicked(null)
+		setLastCakeIndexClicked(null);
 	};
 
 	useEffect(() => {
@@ -69,40 +68,50 @@ export const LayerTool = () => {
 		};
 	}, [canvas]);
 
-
-
-
 	const handleLayerCakeOnClick = (index) => (e) => {
 		// console.log(`index ${index} clickedddd.... ctrlkey = ${e.ctrlKey} shiftkey=  ${e.shiftKey}`)
-		
-		console.log("handlelayercakeonclick")
 
 		if (e.ctrlKey) {
-			canvas.setActiveObject(new ActiveSelection([...selection, layers[index]], {
-				canvas: canvas
-			}));
+			if (selection.includes(layers[index])) {
+				canvas.setActiveObject(
+					new ActiveSelection(
+						[...selection.filter((obj) => obj != layers[index])],
+						{
+							canvas: canvas,
+						}
+					)
+				);
+			} else {
+				canvas.setActiveObject(
+					new ActiveSelection([...selection, layers[index]], {
+						canvas: canvas,
+					})
+				);
+			}
 
-			console.log(canvas.getActiveObjects(), "UPDATED AFTER HANDLE LAYER CAKE ON CLICK")
-			
-
+			if (!selection) {
+				setLastCakeIndexClicked(index);
+			}
 		} else if (e.shiftKey) {
-			let min = Math.min(index, lastCakeIndexClicked)
-			let max = Math.max(index, lastCakeIndexClicked)
-			canvas.setActiveObject(new ActiveSelection([...(layers.slice(min,max+1))], {
-				canvas: canvas
-			}));
+			let min = Math.min(index, lastCakeIndexClicked);
+			let max = Math.max(index, lastCakeIndexClicked);
+			canvas.setActiveObject(
+				new ActiveSelection([...layers.slice(min, max + 1)], {
+					canvas: canvas,
+				})
+			);
 		} else {
+			canvas.setActiveObject(
+				new ActiveSelection([layers[index]], {
+					canvas: canvas,
+				})
+			);
 
-			canvas.setActiveObject(new ActiveSelection([layers[index]], {
-				canvas: canvas
-			}));
+			setLastCakeIndexClicked(index);
 		}
 
 		canvas.renderAll();
-
-		setLastCakeIndexClicked(index)
-	}
-
+	};
 
 	return (
 		<>
@@ -118,7 +127,9 @@ export const LayerTool = () => {
 							}`}
 							onClick={handleLayerCakeOnClick(index)}
 						>
-							<span className={`text-sm truncate`}>{layer.type}</span>
+							<span className={`text-sm truncate select-none`}>
+								{layer.type}
+							</span>
 						</li>
 					))}
 				</ul>
