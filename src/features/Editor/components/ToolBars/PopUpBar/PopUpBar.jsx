@@ -2,7 +2,8 @@ import React from "react";
 import { useContext } from "react";
 
 
-import ElementTool from "../../ElementTool";
+
+import { ElementTool } from "../../Tools";
 
 import { CanvasContext } from "../../../Editor";
 

@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { Rect, Circle, Triangle } from "fabric";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
-import { CanvasContext } from "../../Editor";
+import { CanvasContext } from "../../../Editor";
 
 
-const ElementTool = () => {
+export const ElementTool = () => {
 	const addRectangle = () => {
 		if (canvas) {
 			const rect = new Rect({
@@ -100,6 +100,4 @@ const ElementTool = () => {
 			</div>
 		</>
 	);
-};
-
-export default ElementTool;
+}; 
