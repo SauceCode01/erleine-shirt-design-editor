@@ -32,7 +32,10 @@ export const LayerTool = () => {
 					: true
 			);
 
+
+
 		setLayers([...objects]);
+
 	};
 
 	const updateSelection = (e) => {
@@ -56,6 +59,7 @@ export const LayerTool = () => {
 		canvas.on("selection:cleared", clearSelection);
 
 		updateLayers();
+		selectTopMost();
 
 		return () => {
 			canvas.off("object:added", updateLayers);
@@ -67,6 +71,17 @@ export const LayerTool = () => {
 			canvas.off("selection:cleared", clearSelection);
 		};
 	}, [canvas]);
+
+	const selectTopMost = () => {
+		const objects = canvas.getObjects()
+		const topmost = objects[objects.length - 1]
+		canvas.setActiveObject(
+			new ActiveSelection([topmost], {
+				canvas: canvas,
+			})
+		)
+		canvas.renderAll()
+	}
 
 	const handleLayerCakeOnClick = (index) => (e) => {
 		// console.log(`index ${index} clickedddd.... ctrlkey = ${e.ctrlKey} shiftkey=  ${e.shiftKey}`)
@@ -113,10 +128,52 @@ export const LayerTool = () => {
 		canvas.renderAll();
 	};
 
+
+
+	const moveObjectUpToIndex =(obj, index) => {
+		console.log("move up to index", index, layers.indexOf(obj))
+		for (let i = layers.indexOf(obj); i < index; i++) {
+			console.log("upupup")
+			canvas.bringObjectForward(obj)
+		}
+	}
+
+	const handleBringSelectionUp = () => {
+		console.log("up")
+		if (!selection) return
+
+		let maxIndex = Math.max(...selection.map(obj => layers.indexOf(obj)));
+		maxIndex = Math.min(layers.length, maxIndex+1)
+		let count = selection.length
+
+		selection.forEach((obj, index) => {
+			moveObjectUpToIndex(obj, maxIndex)
+			maxIndex-=1
+		})
+
+		canvas.renderAll()
+
+		// targets.forEach((obj, index) => {
+		// 	canvas.bringObjectForward(obj);
+		// });
+		// updateLayers();
+		// console.log("up");
+		// canvas.renderAll();
+		updateLayers()
+	};
+
 	return (
 		<>
 			<div className=" w-full h-full">
 				<div>LAYERS</div>
+				<hr></hr>
+
+				<div className="w-full flex flex-row p-2 gap-2 justify-center">
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionUp}>up</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">down</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">front</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">back</button>
+				</div>
 
 				<ul className="flex flex-col gap-1">
 					{layers.map((layer, index) => (
