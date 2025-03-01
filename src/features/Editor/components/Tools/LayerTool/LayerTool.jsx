@@ -131,9 +131,8 @@ export const LayerTool = () => {
 
 
 	const moveObjectUpToIndex =(obj, index) => {
-		console.log("move up to index", index, layers.indexOf(obj))
 		for (let i = layers.indexOf(obj); i < index; i++) {
-			console.log("upupup")
+			console.log("mm")
 			canvas.bringObjectForward(obj)
 		}
 	}
@@ -146,8 +145,10 @@ export const LayerTool = () => {
 		maxIndex = Math.min(layers.length, maxIndex+1)
 		let count = selection.length
 
-		selection.forEach((obj, index) => {
+		console.log("move up index", maxIndex)
+		selection.reverse().forEach((obj, index) => {
 			moveObjectUpToIndex(obj, maxIndex)
+			console.log("current index", maxIndex)
 			maxIndex-=1
 		})
 
