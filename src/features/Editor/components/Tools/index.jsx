@@ -1,3 +1,3 @@
 export * from "./ElementTool"
-export * from "./LayersTool"
+export * from "./LayerTool"
 export * from "./PropertiesTool"

@@ -3,7 +3,7 @@ import { ToolContext } from "../ToolManager";
 
 import { generateId } from "../../../../../utils/generateId/generateId";
 
-export const ToolBar = ({ children, className }) => {
+export const ToolBar = ({ children }) => {
 	const toolBarButtonsRef = useRef(null);
 	const toolBarToolsRef = useRef(null);
 
@@ -33,8 +33,7 @@ export const ToolBar = ({ children, className }) => {
 			{/* INSERTING BUTTON WHILE GIVING THEM REFERENCE TO THEIR TOOL  */}
 			{toolBarButtons ? (
 				<>
-					<div className={className}>
-						{toolBarButtons.map((button, index) => {
+					{toolBarButtons.map((button, index) => {
 							const tool = toolBarTools[index];
 
 							return React.cloneElement(button, {
@@ -42,7 +41,6 @@ export const ToolBar = ({ children, className }) => {
 								tool: tool,
 							});
 						})}
-					</div>
 				</>
 			) : (
 				""

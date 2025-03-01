@@ -17,7 +17,7 @@ const CustomToolContainer = () => {
 					}`}
 				>
 					<div className="w-100 h-full p-5">
-						<ToolContainer />
+						<ToolContainer doNotFold/>
 					</div>
 				</div>
 

@@ -137,7 +137,7 @@ const LayerManager = ({ canvas }) => {
 				<ul>
 					{layers.map((layer, index) => (
 						<li
-							key={layer.id}
+0							key={layer.id}
 							className={`cursor-pointer flex items-center justify-between p-2 mb-1 rounded  ${
 								targets
 									? targets.includes(layer.obj)

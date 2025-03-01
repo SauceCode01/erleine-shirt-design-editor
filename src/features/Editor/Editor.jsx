@@ -4,7 +4,7 @@ import CanvasComponent from "./components/CanvasComponent";
 export const CanvasContext = createContext();
 import { ToolManager } from "./components/ToolManager";
 
-import CustomToolContainer from "./components/ToolContainer/ToolContainer";
+import CustomToolContainer from "./components/CustomToolContainer/CustomToolContainer";
 
 import { PopUpBar, SideBar } from "./components/ToolBars";
 
@@ -25,7 +25,6 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 						<div className="flex flex-row">
 							<SideBar></SideBar>
 
-							{/* TOOL CONTAINER  */}
 							<CustomToolContainer></CustomToolContainer>
 						</div>
 
