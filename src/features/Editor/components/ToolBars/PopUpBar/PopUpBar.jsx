@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 
-import { ElementTool, LayerTool } from "../../Tools";
+import { ElementTool, LayerTool, PropertiesTool } from "../../Tools";
 
 import { CanvasContext } from "../../../Editor";
 
@@ -10,6 +10,8 @@ import {
 	LuClipboardPaste,
 	LuCopyPlus,
 	LuLayers,
+	LuSettings,
+	LuSettings2,
 	LuShapes,
 	LuTrash,
 } from "react-icons/lu";
@@ -113,7 +115,7 @@ export function PopUpBar() {
 
 	return (
 		<>
-			{canvasContext.haveActiveSelection   ? (
+			{canvasContext.haveActiveSelection ? (
 				<>
 					<div className="z-20  max-w-[90%] absolute top-5 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg ">
 						<div className="flex flex-row justify-center gap-1 p-1 overflow-clip text-xl">
@@ -155,22 +157,17 @@ export function PopUpBar() {
 									<ToolBar>
 										<ToolBarButtonContainer>
 											<ToolBarButton>
-												<div className="flex items-center justify-center rounded-2xl p-2 aspect-square hover:bg-gray-100">
-													<LuShapes></LuShapes>
-												</div>
-											</ToolBarButton>
-											<ToolBarButton>
-												<div className="flex items-center justify-center rounded-2xl p-2 aspect-square hover:bg-gray-100">
-													<LuLayers></LuLayers>
+												<div
+													className="flex items-center justify-center rounded-2xl p-2 aspect-square hover:bg-gray-100"
+													onClick={paste}
+												>
+													<LuSettings2></LuSettings2>
 												</div>
 											</ToolBarButton>
 										</ToolBarButtonContainer>
 										<ToolBarToolContainer>
 											<ToolBarTool>
-												<ElementTool></ElementTool>
-											</ToolBarTool>
-											<ToolBarTool>
-												<LayerTool></LayerTool>
+												<PropertiesTool></PropertiesTool>
 											</ToolBarTool>
 										</ToolBarToolContainer>
 									</ToolBar>

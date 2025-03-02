@@ -32,8 +32,9 @@ export const ToolBar = ({ children }) => {
 
 			{/* INSERTING BUTTON WHILE GIVING THEM REFERENCE TO THEIR TOOL  */}
 			{toolBarButtons ? (
-				<>
-					{toolBarButtons.map((button, index) => {
+				Array.isArray(toolBarButtons) ? (
+					<>
+						{toolBarButtons.map((button, index) => {
 							const tool = toolBarTools[index];
 
 							return React.cloneElement(button, {
@@ -41,7 +42,14 @@ export const ToolBar = ({ children }) => {
 								tool: tool,
 							});
 						})}
+					</>
+				) : (<>
+					{React.cloneElement(toolBarButtons, {
+							key: generateId(),
+							tool: toolBarTools,
+						})}
 				</>
+				)
 			) : (
 				""
 			)}

@@ -1,13 +1,18 @@
 import { Input } from "@headlessui/react";
 import { Group } from "fabric";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
-export const PropertiesTool = ({ canvas }) => {
+import { CanvasContext } from "../../../Editor";
+
+export const PropertiesTool = () => {
 	const [selectedObject, setSelectedObject] = useState(null);
 	const [width, setWidth] = useState("");
 	const [height, setHeight] = useState("");
 	const [color, setColor] = useState("");
+
+	const canvasContext = useContext(CanvasContext);
+	const canvas = canvasContext.canvas
 
 	useEffect(() => {
 		if (canvas) {
