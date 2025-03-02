@@ -21,33 +21,29 @@ export const SideBar = ({ children }) => {
 	return (
 		<>
 			<div className="bg-gray-300 pt-2 pb-2 flex flex-col gap-2">
-			
 				<ToolBar>
 					<ToolBarButtonContainer>
 						<ToolBarButton>
 							<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
 								<LuShapes></LuShapes>
 								<div className="flex items-center justify-center text-xs">
-
-								Elements
+									Elements
 								</div>
 							</div>
 						</ToolBarButton>
 						<ToolBarButton>
-						<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
+							<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
 								<LuLayers></LuLayers>
 								<div className="flex items-center justify-center text-xs">
-
-								Layers
+									Layers
 								</div>
 							</div>
 						</ToolBarButton>
 						<ToolBarButton>
-						<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
+							<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
 								<LuLetterText></LuLetterText>
 								<div className="flex items-center justify-center text-xs">
-
-								Text
+									Text
 								</div>
 							</div>
 						</ToolBarButton>
