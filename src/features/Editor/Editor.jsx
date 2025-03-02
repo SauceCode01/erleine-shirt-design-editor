@@ -16,13 +16,14 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 
 	const [haveActiveSelection, setHaveActiveSelection] = useState(false);
 
-
+	const [clipBoard, setClipBoard] = useState(null)
+	const _clipBoard = useRef(null)
 
 	
 
 	return (
 		<CanvasContext.Provider
-			value={{ canvas, setCanvas, canvasWidth, canvasHeight, haveActiveSelection, setHaveActiveSelection }}
+			value={{ canvas, setCanvas, canvasWidth, canvasHeight, haveActiveSelection, setHaveActiveSelection,clipBoard, setClipBoard, _clipBoard }}
 		>
 			<ToolManager>
 				<div className={` w-full h-full ${className}`}>

@@ -21,6 +21,7 @@ export const SideBar = ({ children }) => {
 	return (
 		<>
 			<div className="bg-gray-300 pt-2 pb-2 flex flex-col gap-2">
+			
 				<ToolBar>
 					<ToolBarButtonContainer>
 						<ToolBarButton>
