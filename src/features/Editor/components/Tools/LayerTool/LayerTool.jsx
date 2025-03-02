@@ -8,6 +8,9 @@ import { generateId } from "../../../../../utils";
 
 import { ActiveSelection } from "fabric";
 
+
+import { LuChevronDown, LuChevronUp,LuChevronsDown, LuChevronsUp   } from "react-icons/lu";
+
 export const LayerTool = () => {
 	const canvasContext = useContext(CanvasContext);
 	const canvas = canvasContext.canvas;
@@ -212,7 +215,21 @@ export const LayerTool = () => {
 		updateSelection();
 		canvas.renderAll()
 	};
+	
+	const handleBringSelectionBack = () => {
+		if (!selection) return
 
+		getSortedSelection().toReversed().forEach((obj, index) => {
+			canvas.sendObjectToBack(obj)
+		})
+
+		updateLayers();
+		updateSelection();
+		canvas.renderAll()
+	};
+
+
+	
 	return (
 		<>
 			<div className=" w-full h-full">
@@ -220,10 +237,10 @@ export const LayerTool = () => {
 				<hr></hr>
 
 				<div className="w-full flex flex-row p-2 gap-2 justify-center">
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionUp}>up</button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionDown}>down</button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionFront}>front</button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">back</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionUp}><LuChevronUp></LuChevronUp></button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionDown}><LuChevronDown></LuChevronDown></button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionFront}><LuChevronsUp></LuChevronsUp></button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionBack}><LuChevronsDown></LuChevronsDown></button>
 				</div>
 
 				<ul className="flex flex-col gap-1">
@@ -236,7 +253,7 @@ export const LayerTool = () => {
 							onClick={handleLayerCakeOnClick(layers.length - 1 - index)}
 						>
 							<span className={`text-sm truncate select-none`}>
-								{layer.type}
+								{`${index}: ${layer.type}`}
 							</span>
 						</li>
 					))}
@@ -245,3 +262,6 @@ export const LayerTool = () => {
 		</>
 	);
 };
+
+
+
