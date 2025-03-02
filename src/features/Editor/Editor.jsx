@@ -14,9 +14,15 @@ const Editor = ({ className = "border-black border not-first:" }) => {
 	const canvasWidth = 500;
 	const canvasHeight = 500;
 
+	const [haveActiveSelection, setHaveActiveSelection] = useState(false);
+
+
+
+	
+
 	return (
 		<CanvasContext.Provider
-			value={{ canvas, setCanvas, canvasWidth, canvasHeight }}
+			value={{ canvas, setCanvas, canvasWidth, canvasHeight, haveActiveSelection, setHaveActiveSelection }}
 		>
 			<ToolManager>
 				<div className={` w-full h-full ${className}`}>

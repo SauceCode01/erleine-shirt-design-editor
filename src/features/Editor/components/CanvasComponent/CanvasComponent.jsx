@@ -3,6 +3,8 @@ import React, { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
+import { Rect } from "fabric";
+
 import { CanvasContext } from "../../Editor";
 import { useRef } from "react";
 import { clamp } from "../../../../utils/utilities";
@@ -16,6 +18,14 @@ const CanvasComponent = ({}) => {
 	const [zoom, setZoom] = useState(1);
 	const containerElement = useRef(null);
 	const contentElement = useRef(null);
+
+	const selectionActivate = () => {
+		canvasContext.setHaveActiveSelection(true);
+		console.log("hello world");
+	};
+	const clearSelection = () => {
+		canvasContext.setHaveActiveSelection(false);
+	};
 
 	// canvas window behaviour
 	useEffect(() => {
@@ -62,11 +72,41 @@ const CanvasComponent = ({}) => {
 				canvasContext.height
 			);
 
+
+ const rr = new Rect({
+	left: 50,
+	top: 50,
+	fill: "#00eeee",
+	width: 100,
+	height: 100,
+	selectable: true,
+	stroke: "black",
+	strokeWidth: 1,
+	strokeUniform: true,
+})
+			newCanvas.add(rr);
+
+			// const c =  newCanvas.getActiveObject().clone();
+			// 	c.left += 100;
+			// 	newCanvas.add(c);
+			// 	newCanvas.renderAll();
+
+			newCanvas.on("selection:created", selectionActivate);
+			newCanvas.on("selection:updated", selectionActivate);
+			newCanvas.on("selection:cleared", clearSelection);
+
 			return () => {
 				newCanvas.dispose();
+
+				newCanvas.off("selection:created", selectionActivate);
+				newCanvas.off("selection:updated", selectionActivate);
+				newCanvas.off("selection:cleared", clearSelection);
 			};
 		}
 	}, []);
+
+
+
 
 	return (
 		// fill the entire container
@@ -90,6 +130,5 @@ const CanvasComponent = ({}) => {
 		</div>
 	);
 };
-
 
 export default CanvasComponent;

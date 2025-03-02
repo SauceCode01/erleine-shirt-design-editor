@@ -12,6 +12,7 @@ import {
 	ToolBarTool,
 } from "../../ToolManager";
 import { TextTool } from "../../Tools/TextTool/TextTool";
+import { LuLayers, LuLetterText, LuShapes } from "react-icons/lu";
 
 export const SideBar = ({ children }) => {
 	const canvasContext = useContext(CanvasContext);
@@ -23,18 +24,30 @@ export const SideBar = ({ children }) => {
 				<ToolBar>
 					<ToolBarButtonContainer>
 						<ToolBarButton>
-							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
+							<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
+								<LuShapes></LuShapes>
+								<div className="flex items-center justify-center text-xs">
+
 								Elements
+								</div>
 							</div>
 						</ToolBarButton>
 						<ToolBarButton>
-							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
+						<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
+								<LuLayers></LuLayers>
+								<div className="flex items-center justify-center text-xs">
+
 								Layers
+								</div>
 							</div>
 						</ToolBarButton>
 						<ToolBarButton>
-							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
+						<div className="min-h-8 p-2 select-none hover:bg-gray-200 cursor-pointer items-center transition-all duration-200 flex flex-col text-3xl">
+								<LuLetterText></LuLetterText>
+								<div className="flex items-center justify-center text-xs">
+
 								Text
+								</div>
 							</div>
 						</ToolBarButton>
 					</ToolBarButtonContainer>
