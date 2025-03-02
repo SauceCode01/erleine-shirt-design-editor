@@ -46,6 +46,10 @@ export const LayerTool = () => {
 
 	const updateSelection = () => {
 		setSelection(canvas.getActiveObjects())
+		console.log("SELECTION UPDATED")
+		canvas.getActiveObjects().map((obj)=>console.log(obj.type))
+		console.log("sorted selection")
+		getSortedSelection().map((obj)=>console.log(obj.type))
 		// if (e.selected) {
 
 		// 	setSelection((prev)=>{
@@ -133,24 +137,75 @@ export const LayerTool = () => {
 		canvas.renderAll();
 	};
 
-
+	const getSortedSelection = () => {
+		const all = canvas.getObjects()
+		return canvas.getActiveObjects().toSorted((a,b)=>{
+			let ia =all.indexOf(a) 
+			let ib =  all.indexOf(b)
+			if (ia>ib) return 1
+			else if (ia<ib) return -1
+			else return 0
+		})
+	}
 
 	const moveObjectUpToIndex =(obj, index) => {
 		for (let i = layers.indexOf(obj); i < index; i++) {
-			console.log("mm")
 			canvas.bringObjectForward(obj)
 		}
 	}
 
+	
 	const handleBringSelectionUp = () => {
-		if (!selection) return
 
-		let maxIndex = layers.indexOf(selection[selection.length-1]);
+		const sel = getSortedSelection()
+		if (!sel) return
+
+		let maxIndex = layers.indexOf(sel[sel.length-1]);
 		let toindex = Math.min(layers.length-1, maxIndex+1)
 
-		selection.reverse().forEach((obj, index) => {
+		sel.toReversed().forEach((obj, index) => {
 			moveObjectUpToIndex(obj, toindex)
 			toindex -= 1
+		})
+
+		updateLayers();
+		updateSelection();
+		canvas.renderAll()
+	};
+
+	const handleBringSelectionFront = () => {
+		if (!selection) return
+
+		getSortedSelection().forEach((obj, index) => {
+			canvas.bringObjectToFront(obj)
+		})
+
+		updateLayers();
+		updateSelection();
+		canvas.renderAll()
+	};
+
+	const moveObjectDownToIndex =(obj, index) => {
+		for (let i = layers.indexOf(obj); i > index; i--) {
+			canvas.sendObjectBackwards(obj)
+		}
+	}
+
+
+	const handleBringSelectionDown = () => {
+		const sel = getSortedSelection()
+
+		if (!sel) return
+
+		updateSelection();
+		let minIndex = canvas.getObjects().indexOf(sel[0]);
+		let toindex = Math.max(0, minIndex-1)
+
+		console.log("mvoeobjectdown")
+		sel.forEach((obj, index) => {
+			moveObjectDownToIndex(obj, toindex)
+			console.log(obj.type, toindex)
+			toindex += 1
 		})
 
 		updateLayers();
@@ -166,19 +221,19 @@ export const LayerTool = () => {
 
 				<div className="w-full flex flex-row p-2 gap-2 justify-center">
 					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionUp}>up</button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">down</button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">front</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionDown}>down</button>
+					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionFront}>front</button>
 					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none">back</button>
 				</div>
 
 				<ul className="flex flex-col gap-1">
-					{layers.map((layer, index) => (
+					{layers.toReversed().map((layer, index) => (
 						<li
 							key={generateId()}
 							className={`cursor-pointer flex items-center justify-between p-2 mb-1 rounded-2xl  ${
 								selection.includes(layer) ? "bg-blue-300" : "bg-gray-200 "
 							}`}
-							onClick={handleLayerCakeOnClick(index)}
+							onClick={handleLayerCakeOnClick(layers.length - 1 - index)}
 						>
 							<span className={`text-sm truncate select-none`}>
 								{layer.type}
