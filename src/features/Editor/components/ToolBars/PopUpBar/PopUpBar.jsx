@@ -7,6 +7,8 @@ import { CanvasContext } from "../../../Editor";
 
 import { LuCopyPlus, LuLayers, LuShapes, LuTrash } from "react-icons/lu";
 
+import { ActiveSelection } from "fabric";
+
 import {
 	ToolBar,
 	ToolBarButtonContainer,
@@ -32,28 +34,36 @@ export function PopUpBar() {
 	};
 
 	const duplicateSelected = () => {
-	// 	const c =  canvas.getActiveObject().clone();
-  // c.left += 100;
-  // canvas.add(c);
-  // canvas.renderAll();
+		// 	const c =  canvas.getActiveObject().clone();
+		// c.left += 100;
+		// canvas.add(c);
+		// canvas.renderAll();
 
-		
-		var activeObjects = canvas.getActiveObjects();
+		let _clipboard = null;
 
-
-		if (activeObjects) {
-			activeObjects.forEach(function (object) {
-				const clone = object.clone().then((clone)=>{
-					// clone.set({
-					// 	left: object.left + 20,
-					// 	top: object.top + 20,
-					// 	evented: true, // Keeps interactions enabled
-					// });
-					canvas.add(clone)
-				})
-
+		canvas
+			.getActiveObject()
+			.clone()
+			.then((clonedObj) => {
+				canvas.discardActiveObject();
+				clonedObj.set({
+					left: clonedObj.left + 10,
+					top: clonedObj.top + 10,
+					evented: true,
+				});
+				if (clonedObj instanceof ActiveSelection) {
+					// active selection needs a reference to the canvas.
+					clonedObj.canvas = canvas;
+					clonedObj.forEachObject((obj) => {
+						canvas.add(obj);
+					});
+					// this should solve the unselectability
+					clonedObj.setCoords();
+				} else {
+					canvas.add(clonedObj);
+				}
+				canvas.setActiveObject(clonedObj)
 			});
-		}
 	};
 
 	return (

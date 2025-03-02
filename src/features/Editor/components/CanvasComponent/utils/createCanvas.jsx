@@ -18,7 +18,7 @@ export const createCanvas = (canvasRef, width, height) => {
 		cornerColor: "blue",
 		transparentCorners: false,
 		borderColor: "blue",
-		borderDashArray: [5, 2],
+		// borderDashArray: [5, 2],
 	};
 
 	canvas.renderAll();
