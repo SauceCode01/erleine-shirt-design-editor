@@ -38,8 +38,24 @@ export const LayerTool = () => {
 
 	};
 
-	const updateSelection = (e) => {
-		setSelection(e.selected);
+	const checkSelection = () => {
+		const objects = canvas.getActiveObjects() 
+		if (!objects) return;
+		setSelection(objects);
+	}
+
+	const updateSelection = () => {
+		setSelection(canvas.getActiveObjects())
+		// if (e.selected) {
+
+		// 	setSelection((prev)=>{
+		// 		if (prev) return [...prev, ...e.selected]
+		// 		else return [...e.selected]
+		// 	});
+		// }
+		// else {
+		// 	setSelection([])
+		// }
 	};
 
 	const clearSelection = () => {
@@ -59,7 +75,7 @@ export const LayerTool = () => {
 		canvas.on("selection:cleared", clearSelection);
 
 		updateLayers();
-		selectTopMost();
+		checkSelection();
 
 		return () => {
 			canvas.off("object:added", updateLayers);
@@ -72,19 +88,8 @@ export const LayerTool = () => {
 		};
 	}, [canvas]);
 
-	const selectTopMost = () => {
-		const objects = canvas.getObjects()
-		const topmost = objects[objects.length - 1]
-		canvas.setActiveObject(
-			new ActiveSelection([topmost], {
-				canvas: canvas,
-			})
-		)
-		canvas.renderAll()
-	}
 
-	const handleLayerCakeOnClick = (index) => (e) => {
-		// console.log(`index ${index} clickedddd.... ctrlkey = ${e.ctrlKey} shiftkey=  ${e.shiftKey}`)
+	const handleLayerCakeOnClick = (index) => (e) => { 
 
 		if (e.ctrlKey) {
 			if (selection.includes(layers[index])) {
@@ -138,29 +143,19 @@ export const LayerTool = () => {
 	}
 
 	const handleBringSelectionUp = () => {
-		console.log("up")
 		if (!selection) return
 
-		let maxIndex = Math.max(...selection.map(obj => layers.indexOf(obj)));
-		maxIndex = Math.min(layers.length, maxIndex+1)
-		let count = selection.length
+		let maxIndex = layers.indexOf(selection[selection.length-1]);
+		let toindex = Math.min(layers.length-1, maxIndex+1)
 
-		console.log("move up index", maxIndex)
 		selection.reverse().forEach((obj, index) => {
-			moveObjectUpToIndex(obj, maxIndex)
-			console.log("current index", maxIndex)
-			maxIndex-=1
+			moveObjectUpToIndex(obj, toindex)
+			toindex -= 1
 		})
 
+		updateLayers();
+		updateSelection();
 		canvas.renderAll()
-
-		// targets.forEach((obj, index) => {
-		// 	canvas.bringObjectForward(obj);
-		// });
-		// updateLayers();
-		// console.log("up");
-		// canvas.renderAll();
-		updateLayers()
 	};
 
 	return (
