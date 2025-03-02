@@ -11,6 +11,7 @@ import {
 	ToolBarToolContainer,
 	ToolBarTool,
 } from "../../ToolManager";
+import { TextTool } from "../../Tools/TextTool/TextTool";
 
 export const SideBar = ({ children }) => {
 	const canvasContext = useContext(CanvasContext);
@@ -23,12 +24,17 @@ export const SideBar = ({ children }) => {
 					<ToolBarButtonContainer>
 						<ToolBarButton>
 							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
-								elements
+								Elements
 							</div>
 						</ToolBarButton>
 						<ToolBarButton>
 							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
-								layers
+								Layers
+							</div>
+						</ToolBarButton>
+						<ToolBarButton>
+							<div className="min-h-8 p-2 hover:bg-gray-200 cursor-pointer transition-all duration-200">
+								Text
 							</div>
 						</ToolBarButton>
 					</ToolBarButtonContainer>
@@ -38,6 +44,9 @@ export const SideBar = ({ children }) => {
 						</ToolBarTool>
 						<ToolBarTool>
 							<LayerTool></LayerTool>
+						</ToolBarTool>
+						<ToolBarTool>
+							<TextTool></TextTool>
 						</ToolBarTool>
 					</ToolBarToolContainer>
 				</ToolBar>

@@ -8,8 +8,16 @@ import { generateId } from "../../../../../utils";
 
 import { ActiveSelection } from "fabric";
 
-
-import { LuChevronDown, LuChevronUp,LuChevronsDown, LuChevronsUp   } from "react-icons/lu";
+import {
+	LuChevronDown,
+	LuChevronUp,
+	LuChevronsDown,
+	LuChevronsUp,
+	LuEye,
+	LuEyeClosed,
+	LuLock,
+	LuLockOpen,
+} from "react-icons/lu";
 
 export const LayerTool = () => {
 	const canvasContext = useContext(CanvasContext);
@@ -35,24 +43,21 @@ export const LayerTool = () => {
 					: true
 			);
 
-
-
 		setLayers([...objects]);
-
 	};
 
 	const checkSelection = () => {
-		const objects = canvas.getActiveObjects() 
+		const objects = canvas.getActiveObjects();
 		if (!objects) return;
 		setSelection(objects);
-	}
+	};
 
 	const updateSelection = () => {
-		setSelection(canvas.getActiveObjects())
-		console.log("SELECTION UPDATED")
-		canvas.getActiveObjects().map((obj)=>console.log(obj.type))
-		console.log("sorted selection")
-		getSortedSelection().map((obj)=>console.log(obj.type))
+		setSelection(canvas.getActiveObjects());
+		console.log("SELECTION UPDATED");
+		canvas.getActiveObjects().map((obj) => console.log(obj.type));
+		console.log("sorted selection");
+		getSortedSelection().map((obj) => console.log(obj.type));
 		// if (e.selected) {
 
 		// 	setSelection((prev)=>{
@@ -95,9 +100,7 @@ export const LayerTool = () => {
 		};
 	}, [canvas]);
 
-
-	const handleLayerCakeOnClick = (index) => (e) => { 
-
+	const handleLayerCakeOnClick = (index) => (e) => {
 		if (e.ctrlKey) {
 			if (selection.includes(layers[index])) {
 				canvas.setActiveObject(
@@ -141,120 +144,193 @@ export const LayerTool = () => {
 	};
 
 	const getSortedSelection = () => {
-		const all = canvas.getObjects()
-		return canvas.getActiveObjects().toSorted((a,b)=>{
-			let ia =all.indexOf(a) 
-			let ib =  all.indexOf(b)
-			if (ia>ib) return 1
-			else if (ia<ib) return -1
-			else return 0
-		})
-	}
+		const all = canvas.getObjects();
+		return canvas.getActiveObjects().toSorted((a, b) => {
+			let ia = all.indexOf(a);
+			let ib = all.indexOf(b);
+			if (ia > ib) return 1;
+			else if (ia < ib) return -1;
+			else return 0;
+		});
+	};
 
-	const moveObjectUpToIndex =(obj, index) => {
+	const moveObjectUpToIndex = (obj, index) => {
 		for (let i = layers.indexOf(obj); i < index; i++) {
-			canvas.bringObjectForward(obj)
+			canvas.bringObjectForward(obj);
 		}
-	}
+	};
 
-	
 	const handleBringSelectionUp = () => {
+		const sel = getSortedSelection();
+		if (!sel) return;
 
-		const sel = getSortedSelection()
-		if (!sel) return
-
-		let maxIndex = layers.indexOf(sel[sel.length-1]);
-		let toindex = Math.min(layers.length-1, maxIndex+1)
+		let maxIndex = layers.indexOf(sel[sel.length - 1]);
+		let toindex = Math.min(layers.length - 1, maxIndex + 1);
 
 		sel.toReversed().forEach((obj, index) => {
-			moveObjectUpToIndex(obj, toindex)
-			toindex -= 1
-		})
+			moveObjectUpToIndex(obj, toindex);
+			toindex -= 1;
+		});
 
 		updateLayers();
 		updateSelection();
-		canvas.renderAll()
+		canvas.renderAll();
 	};
 
 	const handleBringSelectionFront = () => {
-		if (!selection) return
+		if (!selection) return;
 
 		getSortedSelection().forEach((obj, index) => {
-			canvas.bringObjectToFront(obj)
-		})
+			canvas.bringObjectToFront(obj);
+		});
 
 		updateLayers();
 		updateSelection();
-		canvas.renderAll()
+		canvas.renderAll();
 	};
 
-	const moveObjectDownToIndex =(obj, index) => {
+	const moveObjectDownToIndex = (obj, index) => {
 		for (let i = layers.indexOf(obj); i > index; i--) {
-			canvas.sendObjectBackwards(obj)
+			canvas.sendObjectBackwards(obj);
 		}
-	}
-
+	};
 
 	const handleBringSelectionDown = () => {
-		const sel = getSortedSelection()
+		const sel = getSortedSelection();
 
-		if (!sel) return
+		if (!sel) return;
 
 		updateSelection();
 		let minIndex = canvas.getObjects().indexOf(sel[0]);
-		let toindex = Math.max(0, minIndex-1)
+		let toindex = Math.max(0, minIndex - 1);
 
-		console.log("mvoeobjectdown")
+		console.log("mvoeobjectdown");
 		sel.forEach((obj, index) => {
-			moveObjectDownToIndex(obj, toindex)
-			console.log(obj.type, toindex)
-			toindex += 1
-		})
+			moveObjectDownToIndex(obj, toindex);
+			console.log(obj.type, toindex);
+			toindex += 1;
+		});
 
 		updateLayers();
 		updateSelection();
-		canvas.renderAll()
+		canvas.renderAll();
 	};
-	
+
 	const handleBringSelectionBack = () => {
-		if (!selection) return
+		if (!selection) return;
 
-		getSortedSelection().toReversed().forEach((obj, index) => {
-			canvas.sendObjectToBack(obj)
-		})
+		getSortedSelection()
+			.toReversed()
+			.forEach((obj, index) => {
+				canvas.sendObjectToBack(obj);
+			});
 
 		updateLayers();
 		updateSelection();
-		canvas.renderAll()
+		canvas.renderAll();
 	};
 
+	const handleToggleVisible = () => {
+		const objects = canvas.getActiveObjects();
+		objects.forEach((obj) => {
+			obj.set({ visible: !obj.visible });
+		});
+	};
 
-	
 	return (
 		<>
 			<div className=" w-full h-full">
 				<div>LAYERS</div>
 				<hr></hr>
 
-				<div className="w-full flex flex-row p-2 gap-2 justify-center">
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionUp}><LuChevronUp></LuChevronUp></button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionDown}><LuChevronDown></LuChevronDown></button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionFront}><LuChevronsUp></LuChevronsUp></button>
-					<button className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none" onClick={handleBringSelectionBack}><LuChevronsDown></LuChevronsDown></button>
-				</div>
+				{selection.length > 0 ? (
+					<div className="w-full flex flex-row p-2 gap-2 justify-center">
+						<button
+							className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+							onClick={handleBringSelectionUp}
+						>
+							<LuChevronUp></LuChevronUp>
+						</button>
+						<button
+							className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+							onClick={handleBringSelectionDown}
+						>
+							<LuChevronDown></LuChevronDown>
+						</button>
+						<button
+							className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+							onClick={handleBringSelectionFront}
+						>
+							<LuChevronsUp></LuChevronsUp>
+						</button>
+						<button
+							className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+							onClick={handleBringSelectionBack}
+						>
+							<LuChevronsDown></LuChevronsDown>
+						</button>
+					</div>
+				) : (
+					<></>
+				)}
 
 				<ul className="flex flex-col gap-1">
 					{layers.toReversed().map((layer, index) => (
 						<li
 							key={generateId()}
-							className={`cursor-pointer flex items-center justify-between p-2 mb-1 rounded-2xl  ${
+							className={`cursor-pointer flex items-center justify-between p-2 mb-1 rounded-2xl flex-row  ${
 								selection.includes(layer) ? "bg-blue-300" : "bg-gray-200 "
 							}`}
 							onClick={handleLayerCakeOnClick(layers.length - 1 - index)}
 						>
-							<span className={`text-sm truncate select-none`}>
-								{`${index}: ${layer.type}`}
-							</span>
+							<div
+								className={`text-sm truncate select-none`}
+							>{`${index}: ${layer.type}`}</div>
+
+							<>
+								<div className="relative">
+									<div className="w-full flex flex-row p-2 gap-2 justify-center">
+										{selection.includes(layer) && selection.length == 1 ? (
+											<>
+												<button
+													className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+													onClick={handleBringSelectionUp}
+												>
+													<LuChevronUp></LuChevronUp>
+												</button>
+												<button
+													className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+													onClick={handleBringSelectionDown}
+												>
+													<LuChevronDown></LuChevronDown>
+												</button>
+												<button
+													className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+													onClick={handleBringSelectionFront}
+												>
+													<LuChevronsUp></LuChevronsUp>
+												</button>
+												<button
+													className="bg-blue-50 p-2 rounded-2xl cursor-pointer select-none"
+													onClick={handleBringSelectionBack}
+												>
+													<LuChevronsDown></LuChevronsDown>
+												</button>
+											</>
+										) : (
+											""
+										)}
+
+										{/* <button
+											className="bg-blue-50 p-2 rounded-2xl cursor-pointer"
+											onClick={handleToggleVisible}
+										>
+													{layer.visible? 
+											<LuEye></LuEye> : <LuEyeClosed></LuEyeClosed>}
+										</button> */}
+									</div>
+								</div>
+							</>
 						</li>
 					))}
 				</ul>
@@ -262,6 +338,3 @@ export const LayerTool = () => {
 		</>
 	);
 };
-
-
-
