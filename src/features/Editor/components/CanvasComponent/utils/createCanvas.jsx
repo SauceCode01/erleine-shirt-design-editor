@@ -1,6 +1,6 @@
 
 
-import { Canvas, InteractiveFabricObject } from "fabric";
+import { Canvas, InteractiveFabricObject,ActiveSelection } from "fabric";
 
 
 export const createCanvas = (canvasRef, width, height) => {
@@ -19,6 +19,13 @@ export const createCanvas = (canvasRef, width, height) => {
 		transparentCorners: false,
 		borderColor: "blue",
 		// borderDashArray: [5, 2],
+	};
+
+	ActiveSelection.ownDefaults = {
+		...ActiveSelection.ownDefaults,
+		borderColor: "gray",
+		borderStroke:"black",
+		borderDashArray: [2,6],
 	};
 
 	canvas.renderAll();
